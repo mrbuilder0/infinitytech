@@ -66,7 +66,6 @@ end)
 game.Players.PlayerAdded:Connect(function(plr)
 	plr.Chatted:Connect(function(msg)
 		local message = msg:lower()
-		print(message)
 		if message == ":tampered" then
 			if plr:GetRankInGroup(8116097) >= 253 then
 				TamperedThings("N/A")
