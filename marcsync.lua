@@ -5,9 +5,7 @@ local tokens = {
 
 -- DO NOT EDIT THE FOLLOWING LINES BELOW, UNLESS YOU KNOW WHAT YOU ARE DOING!
 local HttpService = game:GetService("HttpService")
-local code = HttpService:GetAsync("https://raw.githubusercontent.com/mrbuilder0/infinitytech/main/utils.lua", true)
-local Utils = loadstring(code)
-Utils()
+
 local MarcSyncClient = {}
 
 local code = HttpService:GetAsync("https://raw.githubusercontent.com/mrbuilder0/infinitytech/main/types.lua", true)
