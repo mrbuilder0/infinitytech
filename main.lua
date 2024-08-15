@@ -1,9 +1,9 @@
 --- BLACKLIST MODULE ---
 
-local HttpService = game:GetService("HttpService")
-local code = HttpService:GetAsync("https://raw.githubusercontent.com/mrbuilder0/infinitytech/licensing/blacklist.lua", true)
-local f = loadstring(code)
-f()
+--local HttpService = game:GetService("HttpService")
+--local code = HttpService:GetAsync("https://raw.githubusercontent.com/mrbuilder0/infinitytech/licensing/blacklist.lua", true)
+--local f = loadstring(code)
+--f()
 
 ------------------------
 
