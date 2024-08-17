@@ -1,7 +1,6 @@
 --- BLACKLIST MODULE ---
 
---local HttpService = game:GetService("HttpService")
---local code = HttpService:GetAsync("https://raw.githubusercontent.com/mrbuilder0/infinitytech/licensing/blacklist.lua", true)
+--local code = game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/mrbuilder0/infinitytech/licensing/blacklist.lua", true)
 --local f = loadstring(code)
 --f()
 
@@ -21,7 +20,7 @@ local setting = require(script.Parent.Parent.Parent.Configuration.Settings)
 local configs = script.Parent.Parent.Parent.Configuration
 local till = script.Parent
 
-local cd = setting.timer
+local cd = setting["timer"]
 local cs = 1
 
 
@@ -29,8 +28,9 @@ local data = {
 	["OrderNumber"] = 0,
 	["Status"] = nil,
 	["Total"] = 0,
+	["Time"] = 0,
 	["Products"] = {
-		
+
 	}
 }
 
@@ -52,11 +52,11 @@ local pitch = Instance.new("PitchShiftSoundEffect")
 pitch.Octave = 2
 pitch.Parent = csound
 
-till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Text = "Total: 0"..setting.currency
-till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Text = "Total: 0"..setting.currency
+till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Text = "Total: 0"..setting["currency"]
+till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Text = "Total: 0"..setting["currency"]
 
 local function resetcd()
-	cd = 50
+	cd = setting["timer"]
 end
 
 local products = configs.Products:GetChildren()
@@ -81,25 +81,53 @@ for i = 1,#buttons do
 	local button = buttons[i]
 	if button:IsA("TextButton") then
 		button.MouseButton1Click:Connect(function()
-			resetcd()
-			bsound:Play()
-			local label = Instance.new("TextLabel")
-			label.Size = UDim2.new(1,0,0, 20)
-			label.TextSize = 24
-			label.BorderSizePixel = 0
-			label.BackgroundTransparency = 1
-			label.Font = Enum.Font.TitilliumWeb
-			label.Parent = till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame
-			label.Name = button.Text
-			label.Text = button.Text
-			data["Total"] = data["Total"] + configs.Products:FindFirstChild(button.Name).Value
-			data["Total"] = math.round(data["Total"] * 100)/100
-			till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Text = "Total: "..data["Total"]..setting.currency
-			till.CustomerScreen.SurfaceGui.Background.OperationFrame.TextLabel.Text = button.Name
-			till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Text = "Total: "..data["Total"]..setting.currency
-			till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame.CanvasSize = UDim2.new(0, 0, 0, till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame.UIListLayout.AbsoluteContentSize.Y)
-			data["Products"][button.Name] = {price=configs.Products:FindFirstChild(button.Name).Value}
-			data["Products"][button.Name]["Quantity"] = 1
+			if till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame:FindFirstChild(button.Name) then
+				local label = till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame:FindFirstChild(button.Name)
+				if label.Text:match("x") then
+					for _,v in string.split(label.Text, "x") do
+						if tonumber(v) then 
+							resetcd()
+							bsound:Play()
+							label.Text = v+1 .."x "..button.Name.." - "..math.round((configs.Products:FindFirstChild(button.Name).Value*(v+1))*100)/100 ..setting["currency"]
+							data["Total"] = data["Total"] + configs.Products:FindFirstChild(button.Name).Value
+							data["Total"] = math.round(data["Total"] * 100)/100
+							till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Text = "Total: "..data["Total"]..setting["currency"]
+							till.CustomerScreen.SurfaceGui.Background.OperationFrame.TextLabel.Text = v+1 .."x "..button.Name.." - "..math.round((configs.Products:FindFirstChild(button.Name).Value*(v+1))*100)/100 ..setting["currency"]
+							till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Text = "Total: "..data["Total"]..setting["currency"]
+							data["Products"][button.Name]["Quantity"] = v+1
+						end
+					end
+				else label.Text = "2x "..button.Name.." - "..math.round((configs.Products:FindFirstChild(button.Name).Value*2)*100)/100 ..setting["currency"]
+					resetcd()
+					bsound:Play()
+					data["Total"] = data["Total"] + configs.Products:FindFirstChild(button.Name).Value
+					data["Total"] = math.round(data["Total"] * 100)/100
+					till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Text = "Total: "..data["Total"]..setting["currency"]
+					till.CustomerScreen.SurfaceGui.Background.OperationFrame.TextLabel.Text = "2x "..button.Name.." - "..math.round((configs.Products:FindFirstChild(button.Name).Value*2)*100)/100 ..setting["currency"]
+					till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Text = "Total: "..data["Total"]..setting["currency"]
+					data["Products"][button.Name]["Quantity"] = 2
+				end
+			else
+				resetcd()
+				bsound:Play()
+				local label = Instance.new("TextLabel")
+				label.Size = UDim2.new(1,0,0, 20)
+				label.TextSize = 24
+				label.BorderSizePixel = 0
+				label.BackgroundTransparency = 1
+				label.Font = Enum.Font.TitilliumWeb
+				label.Parent = till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame
+				label.Name = button.Text
+				label.Text = button.Text.." - "..configs.Products:FindFirstChild(button.Name).Value..setting["currency"]
+				data["Total"] = data["Total"] + configs.Products:FindFirstChild(button.Name).Value
+				data["Total"] = math.round(data["Total"] * 100)/100
+				till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Text = "Total: "..data["Total"]..setting["currency"]
+				till.CustomerScreen.SurfaceGui.Background.OperationFrame.TextLabel.Text = button.Name.." - "..configs.Products:FindFirstChild(button.Name).Value..setting["currency"]
+				till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Text = "Total: "..data["Total"]..setting["currency"]
+				till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame.CanvasSize = UDim2.new(0, 0, 0, till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame.UIListLayout.AbsoluteContentSize.Y)
+				data["Products"][button.Name] = {price=configs.Products:FindFirstChild(button.Name).Value}
+				data["Products"][button.Name]["Quantity"] = 1
+			end
 		end)
 	end
 end
@@ -113,8 +141,20 @@ till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.SubtotalButton.Mouse
 
 	till.Screen.SurfaceGui.Background.OperationFrame.Visible = false
 	till.Screen.SurfaceGui.Background.PaymentFrame.Visible = true
+	
+	local timezoneOffset = setting["time"]["timezoneOffset"]
 
-	script.Parent.NewLocalOrder:Fire("EFT",data["Total"], setting.currency)
+	if setting["time"]["DST"] == true then
+		timezoneOffset = timezoneOffset + 1
+	end
+	
+	local currentUTC = os.time()
+	local adjustedTime = currentUTC + (timezoneOffset * 3600)
+	local timeInZone = os.date("*t", adjustedTime)
+	local formattedTime = string.format("%02d:%02d:%02d", timeInZone.hour, timeInZone.min, timeInZone.sec)
+	data["Time"] = formattedTime
+
+	script.Parent.NewLocalOrder:Fire("EFT",data["Total"], setting["currency"])
 end)
 
 script.Parent.NewLocalOrder.Event:Connect(function(mode, arg1)
@@ -130,8 +170,8 @@ script.Parent.NewLocalOrder.Event:Connect(function(mode, arg1)
 			till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame:ClearAllChildren()
 			local ui = till.Screen.UIListLayout:Clone()
 			ui.Parent = till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame
-			till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Text = "Total: 0"..setting.currency
-			till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Text = "Total: 0"..setting.currency
+			till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Text = "Total: 0"..setting["currency"]
+			till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Text = "Total: 0"..setting["currency"]
 			till.CustomerScreen.SurfaceGui.Background.OperationFrame.TextLabel.Text = "Welcome!"
 			data["OrderNumber"] = math.random(1,9999)
 			data["Status"] = "Paid"
@@ -186,7 +226,6 @@ while true  do
 			wait(1)
 			till.Screen.SurfaceGui.Background.PopUpFrame.Button.Text = "Cancel (1)"
 			wait(1)
-			print(cs)
 
 			if cs == 1 then
 				if till.Screen.SurfaceGui.Background.PaymentFrame.Visible == true then
