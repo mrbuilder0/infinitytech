@@ -38,6 +38,7 @@ script.Event.Event:Connect(function(info,arg1,arg2)
 					local info = "claimed"
 					script.Event:Fire(info,i, arg2)
 				elseif value["Claimed"] == arg1 then
+					value["Status"]="Completed"
 					oe:Fire(i)
 				end
 			end
