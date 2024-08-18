@@ -25,6 +25,7 @@ ne.Event:Connect(function(order, data)
 	
 	OrderFrame.Header.OrderNumber.Text = data["OrderNumber"]
 	OrderFrame.Header.Time.Text = data["Time"]
+	OrderFrame.LayoutOrder = data["Position"]
 	
 	OrderFrame.ItemsFrame.CanvasSize = UDim2.new(0, 0, 0, OrderFrame.ItemsFrame.UIGridLayout.AbsoluteCellSize.Y)
 
