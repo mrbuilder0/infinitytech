@@ -22,7 +22,6 @@ end)
 
 
 script.Event.Event:Connect(function(info,arg1,arg2)
-	print(info,arg1,arg2)
 	if info == "claim" then
 		for i, value in pairs(orders) do
 			if value["Position"] == arg2 then
