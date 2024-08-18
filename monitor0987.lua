@@ -1,5 +1,5 @@
-local ne = game.Workspace["MRS | myCafe"].NewOrderEvent
-local oe = game.Workspace["MRS | myCafe"].OrderReadyEvent
+local ne = game.Workspace["MRS | myCafe V3"].NewOrderEvent
+local oe = game.Workspace["MRS | myCafe V3"].OrderReadyEvent
 
 ne.Event:Connect(function(data)
 	local label = Instance.new("TextLabel")
