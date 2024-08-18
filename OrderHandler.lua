@@ -7,13 +7,6 @@ local orders = {
 
 pos = 1
 
-ne.Event:Connect(function(number,data)
-	orders[number] = data
-	orders[number]["Position"] = pos
-	orders[number]["Claimed"] = nil
-	pos += 1
-end)
-
 oe.Event:Connect(function(number)
 	orders[number]["Position"] = 0
 	pos = 1
@@ -29,6 +22,7 @@ end)
 
 
 script.Event.Event:Connect(function(info,arg1,arg2)
+	print(info,arg1,arg2)
 	if info == "claim" then
 		for i, value in pairs(orders) do
 			if value["Position"] == arg2 then
@@ -46,5 +40,11 @@ script.Event.Event:Connect(function(info,arg1,arg2)
 	elseif info == "requestAllOrders" then
 		local info = "allOrders"
 		script.Event:Fire(info,orders)
+	elseif info == "newOrder" then
+		orders[arg1] = arg2
+		orders[arg1]["Position"] = pos
+		orders[arg1]["Claimed"] = nil
+		pos += 1
+		ne:Fire(arg1,orders[arg1])
 	end
 end)
