@@ -39,11 +39,16 @@ game.ServerScriptService:FindFirstChild("OrderHandler").Event.Event:Connect(func
 		local position = 1
 		for i, value in pairs(arg1) do
 			local order = script.Parent.Screen.SurfaceGui.ScrollingFrame:FindFirstChild(i)
-			order.LayoutOrder = value["Position"]
-			if value["Position"] == 0 then
-				order.PaymentStatus.TextLabel.Text = order.PaymentStatus.TextLabel.Text.." - Completed"
-				wait(60)
-				order:Destroy()
+			if order:IsA("Frame") then
+				order.LayoutOrder = value["Position"]
+				print(order.LayoutOrder)
+				if value["Position"] == 0 then
+					order.PaymentStatus.TextLabel.Text = order.PaymentStatus.TextLabel.Text.." - Completed"
+					wait(60)
+					order:Destroy()
+				end
+			else
+				print("No Frame")
 			end
 		end
 	elseif info == "claimed" then
