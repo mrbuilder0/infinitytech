@@ -24,6 +24,7 @@ ne.Event:Connect(function(order, data)
 
 	OrderFrame.Header.OrderNumber.Text = data["OrderNumber"]
 	OrderFrame.Header.Time.Text = data["Time"]
+	OrderFrame.LayoutOrder = data["Position"]
 
 	OrderFrame.ItemsFrame.CanvasSize = UDim2.new(0, 0, 0, OrderFrame.ItemsFrame.UIGridLayout.AbsoluteCellSize.Y)
 
@@ -39,13 +40,14 @@ game.ServerScriptService:FindFirstChild("OrderHandler").Event.Event:Connect(func
 			local order = script.Parent.Screen.SurfaceGui.ScrollingFrame:FindFirstChild(i)
 			if order:IsA("Frame") then
 				order.LayoutOrder = value["Position"]
+				print(order.LayoutOrder)
 				if value["Position"] == 0 then
 					order.PaymentStatus.TextLabel.Text = order.PaymentStatus.TextLabel.Text.." - Completed"
 					wait(60)
 					order:Destroy()
 				end
 			else
-				
+				print("No Frame")
 			end
 		end
 	elseif info == "claimed" then
