@@ -177,7 +177,8 @@ script.Parent.NewLocalOrder.Event:Connect(function(mode, arg1)
 			data["Status"] = "Paid"
 			resetcd()
 
-			script.Parent.Parent.Parent.NewOrderEvent:Fire(data["OrderNumber"], data)
+			arg1 = data
+			game.ServerScriptService:FindFirstChild("OrderHandler").Event:Fire("newOrder",arg1)
 			script.Parent.NewLocalOrder:Fire("Complete",data["OrderNumber"], data)
 			script.Parent.Parent.Parent.GlobalPrinter.GlobalReceiptEvent:Fire(data["OrderNumber"], data)
 			table.clear(data["Products"])
