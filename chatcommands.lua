@@ -1,12 +1,11 @@
 game.Players.PlayerAdded:Connect(function(plr)
-	local settings = script.Commands.Configuration
-	print(settings:GetAttribute("prefix"))
+	local settings = game.ServerScriptService:FindFirstChild("IT | Ranktag"):FindFirstChild("AddOn: ChatCommands").Commands.Configuration
 
 	local groupID = require(game.ServerScriptService:FindFirstChild("IT | Ranktag").Settings).GroupID
 	local prefix = settings:GetAttribute("prefix")
 	require(14359225494)
 	wait(1)
-	if plr:GetRankInGroup(groupID) >= script.Commands.Configuration:GetAttribute("minoffdutyrank") then
+	if plr:GetRankInGroup(groupID) >= game.ServerScriptService:FindFirstChild("IT | Ranktag"):FindFirstChild("AddOn: ChatCommands").Commands.Configuration:GetAttribute("minoffdutyrank") then
 		game.Workspace:WaitForChild(plr.Name).Head.Ranktag.Username.Text = "[Offduty] "..plr.Name.."(@"..plr.DisplayName..")"
 	end
 
@@ -14,13 +13,13 @@ game.Players.PlayerAdded:Connect(function(plr)
 		local message = msg:lower()
 		print(message)
 		if message == prefix.."offduty" then
-			if plr:GetRankInGroup(groupID) >= script.Commands.Configuration:GetAttribute("minoffdutyrank") then
+			if plr:GetRankInGroup(groupID) >= game.ServerScriptService:FindFirstChild("IT | Ranktag"):FindFirstChild("AddOn: ChatCommands").Commands.Configuration:GetAttribute("minoffdutyrank") then
 				plr:LoadCharacter()
 				game.Workspace:WaitForChild(plr.Name).Head.Ranktag.Username.Text = "[Offduty] "..plr.Name.."(@"..plr.DisplayName..")"
 			end
 		else
-			for i = 1,#script.Commands:GetChildren() do
-				local command = script.Commands:GetChildren()[i]
+			for i = 1,#game.ServerScriptService:FindFirstChild("IT | Ranktag"):FindFirstChild("AddOn: ChatCommands").Commands:GetChildren() do
+				local command = game.ServerScriptService:FindFirstChild("IT | Ranktag"):FindFirstChild("AddOn: ChatCommands").Commands:GetChildren()[i]
 				if message == prefix..command.Name then
 					if plr:GetRankInGroup(groupID) >= command.Configuration:GetAttribute("minrank") then
 
