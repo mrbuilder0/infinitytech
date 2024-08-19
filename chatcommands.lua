@@ -1,7 +1,7 @@
 game.Players.PlayerAdded:Connect(function(plr)
 	local settings = script.Commands.Configuration
 
-	local groupID = require(script.Parent.Settings).GroupID
+	local groupID = require(game.ServerScriptService:FindFirstChild("IT | Ranktag").Settings).GroupID
 	local prefix = settings:GetAttribute("prefix")
 	require(14359225494)
 	wait(1)
