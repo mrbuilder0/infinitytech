@@ -11,7 +11,7 @@ game.Players.PlayerAdded:Connect(function(plr)
 
 	plr.Chatted:Connect(function(msg)
 		local message = msg:lower()
-		print(message)
+		print(message, groupID)
 		if message == prefix.."offduty" then
 			if plr:GetRankInGroup(groupID) >= script.Commands.Configuration:GetAttribute("minoffdutyrank") then
 				plr:LoadCharacter()
