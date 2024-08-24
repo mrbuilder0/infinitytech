@@ -18,6 +18,9 @@ if require(game.Workspace["MRS | myCafe V3"].Configuration.Settings).Simplifying
 				local arg2 = message[2]
 				local info = "claimOrder"
 				HandlerEvent:Fire(info,arg1,arg2)
+			elseif message[1] == require(game.Workspace["MRS | myCafe V3"].Configuration.Settings).Simplifying.commands.prefix.."complete" then
+				if orders[message[2]]["Claimed"] == plr.Name then
+					oe:Fire(message[2])
 			end
 		end)
 	end)
