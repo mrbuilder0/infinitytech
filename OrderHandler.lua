@@ -45,5 +45,6 @@ script.Event.Event:Connect(function(info,arg1,arg2)
 		orders[arg1]["Claimed"] = nil
 		pos += 1
 		ne:Fire(arg1,orders[arg1])
+		print(arg1,orders[arg1])
 	end
 end)
