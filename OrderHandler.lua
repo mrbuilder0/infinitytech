@@ -7,6 +7,23 @@ local orders = {
 
 pos = 1
 
+
+if require(game.Workspace["MRS | myCafe V3"].Configuration.Settings).Simplifying.commands.enabled == true then
+	game.Players.PlayerAdded:Connect(function(plr)
+		plr.Chatted:Connect(function(msg)
+			local message = msg:split(" ")
+			if message[1] == require(game.Workspace["MRS | myCafe V3"].Configuration.Settings).Simplifying.commands.prefix.."claim" then
+				local HandlerEvent = game.ServerScriptService.OrderHandler:WaitForChild("Event")
+				local arg1 = plr.Name
+				local arg2 = message[2]
+				local info = "claimOrder"
+				HandlerEvent:Fire(info,arg1,arg2)
+			end
+		end)
+	end)
+end
+
+
 oe.Event:Connect(function(number)
 	orders[number]["Position"] = 0
 	pos = 1
@@ -36,6 +53,13 @@ script.Event.Event:Connect(function(info,arg1,arg2)
 				end
 			end
 		end
+	elseif info == "claimOrder" then
+		print(info,arg1,arg2)
+		if orders[arg2]["Claimed"] == nil then
+			orders[arg2]["Claimed"] = arg1
+			local info = "claimed"
+			script.Event:Fire(info,arg1, arg2)
+		end
 	elseif info == "requestAllOrders" then
 		local info = "allOrders"
 		script.Event:Fire(info,orders)
@@ -44,6 +68,6 @@ script.Event.Event:Connect(function(info,arg1,arg2)
 		orders[arg1]["Position"] = pos
 		orders[arg1]["Claimed"] = nil
 		pos += 1
-		ne:Fire(arg2,orders[arg2])
+		ne:Fire(arg1,orders[arg1])
 	end
 end)
