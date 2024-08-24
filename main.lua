@@ -141,13 +141,13 @@ till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.SubtotalButton.Mouse
 
 	till.Screen.SurfaceGui.Background.OperationFrame.Visible = false
 	till.Screen.SurfaceGui.Background.PaymentFrame.Visible = true
-	
+
 	local timezoneOffset = setting["time"]["timezoneOffset"]
 
 	if setting["time"]["DST"] == true then
 		timezoneOffset = timezoneOffset + 1
 	end
-	
+
 	local currentUTC = os.time()
 	local adjustedTime = currentUTC + (timezoneOffset * 3600)
 	local timeInZone = os.date("*t", adjustedTime)
@@ -157,9 +157,17 @@ till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.SubtotalButton.Mouse
 	script.Parent.NewLocalOrder:Fire("EFT",data["Total"], setting["currency"])
 end)
 
-script.Parent.NewLocalOrder.Event:Connect(function(mode, arg1)
+script.Parent.NewLocalOrder.Event:Connect(function(mode, arg1, name)
 	if mode == "EFTb" then
 		if arg1 == "success" then
+			data["OrderNumber"] = math.random(1,9999)
+			
+			local responder = game.ServerStorage:FindFirstChild("MRS myCafe receipt responder"):Clone()
+			responder.Name = data["OrderNumber"]
+			responder.ToolTip = data["OrderNumber"]
+			responder.Parent = game.Players:FindFirstChild(name).Backpack
+			game.Players:FindFirstChild(name).Character:FindFirstChildOfClass("Humanoid"):EquipTool(responder)
+			
 			till.CustomerScreen.SurfaceGui.Background.OperationFrame.Visible = true
 			till.CustomerScreen.SurfaceGui.Background.PaymentFrame.Visible = false
 
@@ -173,12 +181,11 @@ script.Parent.NewLocalOrder.Event:Connect(function(mode, arg1)
 			till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Text = "Total: 0"..setting["currency"]
 			till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Text = "Total: 0"..setting["currency"]
 			till.CustomerScreen.SurfaceGui.Background.OperationFrame.TextLabel.Text = "Welcome!"
-			data["OrderNumber"] = math.random(1,9999)
 			data["Status"] = "Paid"
 			resetcd()
 
 			arg1 = data["OrderNumber"]
-			arg2 = data
+			local arg2 = data
 			game.ServerScriptService:FindFirstChild("OrderHandler").Event:Fire("newOrder",arg1,arg2)
 			script.Parent.NewLocalOrder:Fire("Complete",data["OrderNumber"], data)
 			script.Parent.Parent.Parent.GlobalPrinter.GlobalReceiptEvent:Fire(data["OrderNumber"], data)
