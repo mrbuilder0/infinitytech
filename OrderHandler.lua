@@ -39,13 +39,15 @@ oe.Event:Connect(function(number)
 		end
 	end
 	local webhook = "https://webhook.lewisakura.moe/api/webhooks/1279104075702472807/SQT76lz61HYFmCsJSmfM-jq-QrF1WAlkJs-CBqi1Ehlag4L-N7ulDI7k1_iwkiJoye_m"
+	local claimer = orders[number]["Claimed"]
+	local nmbr = number
 	local data = {
 		["content"] = "",
 		["embeds"] = {{
 			["title"] = ":fork_and_knife:  **Order Completed** :fork_and_knife: ",
 			["description"] = "A new order has been completed and another customer satisfied!",
 			["type"] = "rich",
-			["color"] = tonumber(0xff0000),
+			["color"] = tonumber(0x82BBF0),
 			["fields"] = {
 				{
 					["name"] = "**Place:**",
@@ -54,23 +56,23 @@ oe.Event:Connect(function(number)
 				},
 				{
 					["name"] = "**Order Number:**",
-					["value"] = "> "..number,
+					["value"] = "> "..nmbr,
 					["inline"] = false
 				},
 				{
 					["name"] = "**Claimed by:**",
-					["value"] = "> "..orders[number]["Claimed"],
+					["value"] = "> "..claimer,
 					["inline"] = false
 				},
 			},
 			["footer"] = {
-  				["text"] = "powered by Infinity Tech ©️ 2023"
+				["text"] = "powered by Infinity Tech ©️ 2023"
 			}
 		}}
 	}
 	local encodedData = game:GetService("HttpService"):JSONEncode(data)
 	game:GetService("HttpService"):PostAsync(webhook,encodedData)
-		
+
 	script.Event:Fire("correction",orders)
 end)
 
