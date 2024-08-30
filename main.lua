@@ -166,7 +166,7 @@ script.Parent.NewLocalOrder.Event:Connect(function(mode, arg1, name)
 			responder.Name = data["OrderNumber"]
 			responder.ToolTip = data["OrderNumber"]
 			responder.Parent = game.Players:FindFirstChild(name).Backpack
-			--game.Players:FindFirstChild(name).Character:FindFirstChildOfClass("Humanoid"):EquipTool(responder)
+			game.Players:FindFirstChild(name).Character:FindFirstChildOfClass("Humanoid"):EquipTool(responder)
 			
 			till.CustomerScreen.SurfaceGui.Background.OperationFrame.Visible = true
 			till.CustomerScreen.SurfaceGui.Background.PaymentFrame.Visible = false
