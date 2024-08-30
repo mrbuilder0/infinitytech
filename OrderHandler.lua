@@ -1,3 +1,4 @@
+print("HEY")
 local ne = game.Workspace["MRS | myCafe V3"].NewOrderEvent
 local oe = game.Workspace["MRS | myCafe V3"].OrderReadyEvent
 
