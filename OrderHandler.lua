@@ -38,7 +38,7 @@ oe.Event:Connect(function(number)
 			pos += 1
 		end
 	end
-	local webhook = "https://webhook.lewisakura.moe/api/webhooks/1279104075702472807/SQT76lz61HYFmCsJSmfM-jq-QrF1WAlkJs-CBqi1Ehlag4L-N7ulDI7k1_iwkiJoye_m"
+	local webhook = "https://webhook.lewisakura.moe/api/webhooks/"..require(game.Workspace["MRS | myCafe V3"].Configuration.Settings)["logging"]["webhook"]
 	local claimer = orders[number]["Claimed"]
 	local nmbr = number
 	print(claimer)
