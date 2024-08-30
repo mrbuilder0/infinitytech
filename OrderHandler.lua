@@ -42,6 +42,7 @@ oe.Event:Connect(function(number)
 	local webhook = "https://webhook.lewisakura.moe/api/webhooks/1279104075702472807/SQT76lz61HYFmCsJSmfM-jq-QrF1WAlkJs-CBqi1Ehlag4L-N7ulDI7k1_iwkiJoye_m"
 	local claimer = orders[number]["Claimed"]
 	local nmbr = number
+	print(claimer)
 	local data = {
 		["content"] = "",
 		["embeds"] = {{
