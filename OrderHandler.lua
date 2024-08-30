@@ -66,7 +66,7 @@ oe.Event:Connect(function(number)
 				},
 			},
 			["footer"] = {
-				["text"] = "powered by Infinity Tech ©️ 2023"
+				["text"] = "-# powered by Infinity Tech ©️ 2023"
 			}
 		}}
 	}
