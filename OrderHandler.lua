@@ -55,17 +55,17 @@ oe.Event:Connect(function(number)
 					["value"] = "> ["..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name.."](https://www.roblox.com/games/"..game.PlaceId..")",
 					["inline"] = false
 				},
-				--{
-				--	["name"] = "**Order Number:**",
-				--	["value"] = "> "..nmbr,
-				--	["inline"] = false
-				--},
-				print("No number")
 				{
-					["name"] = "**Claimed by:**",
-					["value"] = "> "..claimer,
+					["name"] = "**Order Number:**",
+					["value"] = "> "..nmbr,
 					["inline"] = false
 				},
+				print("No claimer")
+				--{
+					--["name"] = "**Claimed by:**",
+					--["value"] = "> "..claimer,
+					--["inline"] = false
+				--},
 			},
 			["footer"] = {
 				["text"] = "powered by Infinity Tech ©️ 2023"
