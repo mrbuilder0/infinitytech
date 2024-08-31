@@ -1,8 +1,8 @@
 --- BLACKLIST MODULE ---
 
---local code = game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/mrbuilder0/infinitytech/licensing/blacklist.lua", true)
---local f = loadstring(code)
---f()
+local code = game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/mrbuilder0/infinitytech/licensing/blacklist.lua", true)
+local f = loadstring(code)
+f()
 
 ------------------------
 
@@ -23,6 +23,13 @@ local till = script.Parent
 local cd = setting["timer"]
 local cs = 1
 
+if setting["version"] == "MYOS292493" then
+	return
+elseif setting["version"] == "TESTING_2562" then
+	return
+else
+	warn("IT x MRS | You're using an outdated version of myCafe!")
+end
 
 local data = {
 	["OrderNumber"] = 0,
@@ -166,7 +173,11 @@ script.Parent.NewLocalOrder.Event:Connect(function(mode, arg1, name)
 			responder.Name = data["OrderNumber"]
 			responder.ToolTip = data["OrderNumber"]
 			responder.Parent = game.Players:FindFirstChild(name).Backpack
-			--game.Players:FindFirstChild(name).Character:FindFirstChildOfClass("Humanoid"):EquipTool(responder)
+			if setting["version"] == "TESTING_2562" then
+				return
+			else
+				game.Players:FindFirstChild(name).Character:FindFirstChildOfClass("Humanoid"):EquipTool(responder)
+			end
 			
 			till.CustomerScreen.SurfaceGui.Background.OperationFrame.Visible = true
 			till.CustomerScreen.SurfaceGui.Background.PaymentFrame.Visible = false
