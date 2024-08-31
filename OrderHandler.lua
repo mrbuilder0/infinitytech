@@ -60,6 +60,7 @@ oe.Event:Connect(function(number)
 				--	["value"] = "> "..nmbr,
 				--	["inline"] = false
 				--},
+				print("No number")
 				{
 					["name"] = "**Claimed by:**",
 					["value"] = "> "..claimer,
