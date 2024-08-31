@@ -29,6 +29,11 @@ end
 
 
 oe.Event:Connect(function(number)
+	if not orders[number] then
+		warn("Order number " .. tostring(number) .. " does not exist.")
+		return
+	end
+	
 	orders[number]["Position"] = 0
 	pos = 1
 	for i, value in pairs(orders) do
@@ -38,8 +43,13 @@ oe.Event:Connect(function(number)
 			pos += 1
 		end
 	end
-	local webhook = "https://webhook.lewisakura.moe/api/webhooks/"..require(game.Workspace["MRS | myCafe V3"].Configuration.Settings)["logging"]["webhook"]
+	local webhook = require(game.Workspace["MRS | myCafe V3"].Configuration.Settings)["logging"]["webhook"]
 	local claimer = orders[number]["Claimed"]
+	if not claimer then
+		warn("Order number " .. tostring(number) .. " has no claimer.")
+		return
+	end
+
 	local nmbr = number
 	print(claimer)
 	local data = {
@@ -60,12 +70,11 @@ oe.Event:Connect(function(number)
 					["value"] = "> "..nmbr,
 					["inline"] = false
 				},
-				print("No claimer")
-				--{
-					--["name"] = "**Claimed by:**",
-					--["value"] = "> "..claimer,
-					--["inline"] = false
-				--},
+				{
+					["name"] = "**Claimed by:**",
+					["value"] = "> "..claimer,
+					["inline"] = false
+				},
 			},
 			["footer"] = {
 				["text"] = "powered by Infinity Tech ©️ 2023"
