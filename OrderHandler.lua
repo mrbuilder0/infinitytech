@@ -55,11 +55,11 @@ oe.Event:Connect(function(number)
 					["value"] = "> ["..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name.."](https://www.roblox.com/games/"..game.PlaceId..")",
 					["inline"] = false
 				},
-				{
-					["name"] = "**Order Number:**",
-					["value"] = "> "..nmbr,
-					["inline"] = false
-				},
+				--{
+				--	["name"] = "**Order Number:**",
+				--	["value"] = "> "..nmbr,
+				--	["inline"] = false
+				--},
 				{
 					["name"] = "**Claimed by:**",
 					["value"] = "> "..claimer,
