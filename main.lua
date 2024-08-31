@@ -24,9 +24,9 @@ local cd = setting["timer"]
 local cs = 1
 
 if setting["version"] == "MYOS292493" then
-	return
+	print("Correct version")
 elseif setting["version"] == "TESTING_2562" then
-	return
+	print("Testing Mode")
 else
 	warn("IT x MRS | You're using an outdated version of myCafe!")
 end
@@ -168,7 +168,7 @@ script.Parent.NewLocalOrder.Event:Connect(function(mode, arg1, name)
 	if mode == "EFTb" then
 		if arg1 == "success" then
 			data["OrderNumber"] = math.random(1,9999)
-			
+
 			local responder = game.ServerStorage:FindFirstChild("MRS myCafe receipt responder"):Clone()
 			responder.Name = data["OrderNumber"]
 			responder.ToolTip = data["OrderNumber"]
@@ -178,7 +178,7 @@ script.Parent.NewLocalOrder.Event:Connect(function(mode, arg1, name)
 			else
 				game.Players:FindFirstChild(name).Character:FindFirstChildOfClass("Humanoid"):EquipTool(responder)
 			end
-			
+
 			till.CustomerScreen.SurfaceGui.Background.OperationFrame.Visible = true
 			till.CustomerScreen.SurfaceGui.Background.PaymentFrame.Visible = false
 
