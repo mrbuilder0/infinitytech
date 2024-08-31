@@ -174,7 +174,7 @@ script.Parent.NewLocalOrder.Event:Connect(function(mode, arg1, name)
 			responder.ToolTip = data["OrderNumber"]
 			responder.Parent = game.Players:FindFirstChild(name).Backpack
 			if setting["version"] == "TESTING_2562" then
-				return
+				
 			else
 				game.Players:FindFirstChild(name).Character:FindFirstChildOfClass("Humanoid"):EquipTool(responder)
 			end
