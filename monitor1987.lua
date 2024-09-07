@@ -22,7 +22,7 @@ ne.Event:Connect(function(order, data)
 			local textlabel = productFrame.TextLabel:Clone()
 			textlabel.Text = "NO "..value
 			textlabel.Name = value
-			textlabel.TextSize = 20
+			textlabel.TextScaled = true
 			textlabel.FontFace.Style = Enum.FontStyle.Italic
 			textlabel.Parent = productFrame
 		end
