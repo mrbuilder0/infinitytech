@@ -2,13 +2,13 @@ local ne = game.Workspace["MRS | myCafe V3"].NewOrderEvent
 local oe = game.Workspace["MRS | myCafe V3"].OrderReadyEvent
 
 ne.Event:Connect(function(order, data)
-	local OrderFrame = script.Frame:Clone()
+	local OrderFrame = script.Frame
 	OrderFrame.Name = order
 
 	for i, value in pairs(data["Products"]) do
 		local productFrame = script.ProductFrame:Clone()
 		local product = productFrame.TextLabel:Clone()
-		
+
 		productFrame.Name = i.."Frame"
 		product.Text = value["Quantity"].."x "..i
 		product.Name = i
