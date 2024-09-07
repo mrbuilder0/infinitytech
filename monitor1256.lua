@@ -2,21 +2,37 @@ local ne = game.Workspace["MRS | myCafe V3"].NewOrderEvent
 local oe = game.Workspace["MRS | myCafe V3"].OrderReadyEvent
 
 ne.Event:Connect(function(order, data)
-	local OrderFrame = script.Frame:Clone()
+	print("hey")
+	local OrderFrame = script.Frame
 	OrderFrame.Name = order
 
 	for i, value in pairs(data["Products"]) do
-		local product = Instance.new("TextLabel")
+		local productFrame = script.ProductFrame:Clone()
+		local product = productFrame.TextLabel:Clone()
+
+		productFrame.Name = i.."Frame"
 		product.Text = value["Quantity"].."x "..i
 		product.Name = i
 		product.TextColor3 = Color3.new(0, 0, 0)
-		product.TextSize = 14
+		product.TextSize = 16
+		product.FontFace.Weight = Enum.FontWeight.SemiBold
 		product.BackgroundTransparency = 1
-		product.Parent = OrderFrame.ItemsFrame
-		if value["Status"] == "Paid" then
+		product.Parent = productFrame
+		for i, value in pairs(value["RemovedIngredients"]) do
+			local textlabel = productFrame.TextLabel:Clone()
+			textlabel.Text = "NO "..value
+			textlabel.Name = value
+			textlabel.TextSize = 14
+			textlabel.FontFace.Style = Enum.FontStyle.Italic
+			textlabel.Parent = productFrame
+		end
+		productFrame.TextLabel:Destroy()
+		productFrame.Size = UDim2.new(1,0,0,productFrame.UIListLayout.AbsoluteContentSize.Y)
+		productFrame.Parent = OrderFrame.ItemsFrame
+		if data["Status"] == "Paid" then
 			OrderFrame.PaymentStatus.BackgroundColor3 = Color3.new(0.545098, 0.0784314, 0.0784314)
 			OrderFrame.PaymentStatus.TextLabel.Text = "Paid"
-		elseif value["Status"] == "Stored" then
+		elseif data["Status"] == "Planned" then
 			OrderFrame.PaymentStatus.BackgroundColor3 = Color3.new(0.0784314, 0.196078, 0.435294)
 			OrderFrame.PaymentStatus.TextLabel.Text = "Stored"
 		end
@@ -26,11 +42,11 @@ ne.Event:Connect(function(order, data)
 	OrderFrame.Header.Time.Text = data["Time"]
 	OrderFrame.LayoutOrder = data["Position"]
 
-	OrderFrame.ItemsFrame.CanvasSize = UDim2.new(0, 0, 0, OrderFrame.ItemsFrame.UIGridLayout.AbsoluteCellSize.Y)
+	OrderFrame.ItemsFrame.CanvasSize = UDim2.new(0, 0, 0, OrderFrame.ItemsFrame.UIListLayout.AbsoluteContentSize.Y)
 
 	OrderFrame.Parent = script.Parent.Screen.SurfaceGui.ScrollingFrame
 
-	script.Parent.Screen.SurfaceGui.ScrollingFrame.CanvasSize = UDim2.new(0,0,0,script.Parent.Screen.SurfaceGui.ScrollingFrame.UIGridLayout.AbsoluteCellSize.Y)
+	script.Parent.Screen.SurfaceGui.ScrollingFrame.CanvasSize = UDim2.new(0,0,0,script.Parent.Screen.SurfaceGui.ScrollingFrame.UIGridLayout.AbsoluteContentSize.Y)
 end)
 
 game.ServerScriptService:FindFirstChild("OrderHandler").Event.Event:Connect(function(info,arg1,arg2)
@@ -49,6 +65,15 @@ game.ServerScriptService:FindFirstChild("OrderHandler").Event.Event:Connect(func
 			else
 				print("No Frame")
 			end
+		end
+	elseif info == "statusChanged" then
+		local OrderFrame = script.Parent.Screen.SurfaceGui.ScrollingFrame:FindFirstChild(arg1["OrderNumber"])
+		if arg1["Status"] == "Paid" then
+			OrderFrame.PaymentStatus.BackgroundColor3 = Color3.new(0.545098, 0.0784314, 0.0784314)
+			OrderFrame.PaymentStatus.TextLabel.Text = "Paid"
+		elseif arg1["Status"] == "Planned" then
+			OrderFrame.PaymentStatus.BackgroundColor3 = Color3.new(0.0784314, 0.196078, 0.435294)
+			OrderFrame.PaymentStatus.TextLabel.Text = "Stored"
 		end
 	elseif info == "claimed" then
 		script.Parent.Screen.SurfaceGui.ScrollingFrame:FindFirstChild(arg1).PaymentStatus.WorkerClaim.Text = arg2

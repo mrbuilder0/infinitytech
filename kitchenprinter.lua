@@ -15,7 +15,7 @@ script.Parent.Parent.NewLocalOrder.Event:Connect(function(mode, order, data)
 			label.Parent = script.Parent.Receipt.SurfaceGui.PFrame
 			label.Size = UDim2.new(1,0,0, 18)
 			label.TextScaled = true
-			label.Text = value["Quantity"].."x "..i.." - "..configs.Products:FindFirstChild(i).Value..setting["currency"]
+			label.Text = value["Quantity"].."x "..i.." - "..configs.Products:FindFirstChild(i).Price.Value..setting["currency"]
 			label.Name = i
 			label.BackgroundTransparency = 1
 			script.Parent.Receipt.SurfaceGui.OrderNumber.Text = order
