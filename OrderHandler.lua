@@ -51,7 +51,6 @@ oe.Event:Connect(function(number)
 	end
 
 	local nmbr = number
-	print(claimer)
 	local data = {
 		["content"] = "",
 		["embeds"] = {{
@@ -104,7 +103,6 @@ script.Event.Event:Connect(function(info,arg1,arg2)
 			end
 		end
 	elseif info == "claimOrder" then
-		print(info,arg1,arg2)
 		if orders[arg2]["Claimed"] == nil then
 			orders[arg2]["Claimed"] = arg1
 			local info = "claimed"
