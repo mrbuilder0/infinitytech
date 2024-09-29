@@ -6,15 +6,36 @@
 
 ------------------------
 
+
+local bootingFrameModel = game:GetService("InsertService"):LoadAsset(137671745532852)
+bootingFrame = bootingFrameModel:FindFirstChild("BootingFrame")
+bootingFrame.Parent = script.Parent.Screen.SurfaceGui.Background
+
 local Parcel = require(9428572121)
 
 if Parcel:Whitelist("65f5883387fdde40053c4c98", "cqxvu449m2dibisp15270ya7sgtv") then
 	print("Whitelist found: myCafe")
 else
 	warn("Whitelist not found: myCafe")
+	local bootingFrame = script.Parent.Screen.SurfaceGui.Background.BootingFrame
+	script.Parent.Screen.SurfaceGui.Background.LogInFrame.Visible = false
+	script.Parent.Screen.SurfaceGui.Background.OperationFrame.Visible = false
+	bootingFrame.Visible = true
+	bootingFrame.Sequence1.Visible = true
+
+	local label = Instance.new("TextLabel")
+	label.Text = "> No license found"
+	label.TextScaled = true
+	label.BackgroundTransparency = 1
+	label.TextColor3 = Color3.new(1, 1, 1)
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.Size = UDim2.new(1,0,0,30)
+	label.Parent = bootingFrame.Sequence1
+
 	script:Destroy()
 end
 
+local latestVersion = "MYOS292493"
 
 local setting = require(script.Parent.Parent.Parent.Configuration.Settings)
 local configs = script.Parent.Parent.Parent.Configuration
@@ -22,24 +43,44 @@ local till = script.Parent
 
 local cd = setting["timer"]
 local cs = 1
+local power = "off"
 
-if setting["version"] == "MYOS292493" then
+if setting["version"] == latestVersion then
 	print("Correct version")
 elseif setting["version"] == "TESTING_2562" then
 	print("Testing Mode")
 else
-	warn("IT x MRS | You're using an outdated version of myCafe!")
+	bootingFrame.Visible = true
+	bootingFrame.Sequence1.Visible = true
+
+	local label = Instance.new("TextLabel")
+	label.Text = "> Outdated version - You might have to upgrade for proper usage"
+	label.TextScaled = true
+	label.BackgroundTransparency = 1
+	label.TextColor3 = Color3.new(1, 0.592157, 0.298039)
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.Size = UDim2.new(1,0,0,30)
+	label.Parent = bootingFrame.Sequence1
+	wait(30)
+	label:Destroy()
+	bootingFrame.Visible = false
 end
+
+local modified = false
 
 local data = {
 	["OrderNumber"] = 0,
 	["Status"] = nil,
 	["Total"] = 0,
+	["Quantity"] = 0,
 	["Time"] = 0,
 	["Products"] = {
 
 	}
 }
+
+local bootingsound = "rbxassetid://2084290015"
+local shutdownsound = "rbxassetid://3673835822"
 
 local bsound = Instance.new("Sound")
 bsound.Parent = till.Screen
@@ -62,145 +103,486 @@ pitch.Parent = csound
 till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = "Total: 0"..setting["currency"]
 till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Value.Text = "Total: 0"..setting["currency"]
 
+till.Screen.SurfaceGui.Background.OperationFrame.FooterFrame.Version.Text = setting["version"]
+
 local function resetcd()
 	cd = setting["timer"]
 end
 
+local function resetAll()
+	data["Status"] = nil
+	data["Total"] = 0
+	data["Quantity"] = 0
+	data["Time"] = 0
+	table.clear(data["Products"])
+
+
+
+	till.Screen.SurfaceGui.Background.IFrame.Visible = false
+	till.Screen.SurfaceGui.Background.IFrame.Frame.Title.Text = " "
+	till.Screen.SurfaceGui.Background.IFrame.Frame.Description.Text = " "
+
+	till.CustomerScreen.SurfaceGui.Background.IFrame.Visible = false
+	till.CustomerScreen.SurfaceGui.Background.IFrame.Frame.Title.Text = " "
+	till.CustomerScreen.SurfaceGui.Background.IFrame.Frame.Description.Text = " "
+
+
+	till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame:ClearAllChildren()
+	local ui = till.Screen.UIListLayout:Clone()
+	ui.Parent = till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame
+	local uii = ui:Clone()
+	uii.Parent = till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame
+	till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = "Total: 0"..setting["currency"]
+	till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Value.Text = "Total: 0"..setting["currency"]
+	till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Item_amount.Value.Text = 0
+	till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Item_amount.Value.Text = 0
+
+	till.Screen.SurfaceGui.Background.LogInFrame.Frame.N.Visible = true
+	till.Screen.SurfaceGui.Background.LogInFrame.Frame.S.Visible = false
+	till.Screen.SurfaceGui.Background.LogInFrame.Visible = true
+	till.CustomerScreen.SurfaceGui.Enabled = false
+	till.Scanner.CanTouch = false
+
+	till.Screen.SurfaceGui.Background.IngredientsFrame.Frame.ScrollingFrame:ClearAllChildren()
+	local UiList = script.UIListLayout:Clone()
+	UiList.Parent = till.Screen.SurfaceGui.Background.IngredientsFrame.Frame.ScrollingFrame
+	till.Screen.SurfaceGui.Background.IngredientsFrame.Visible = false
+
+	local bootingFrame = till.Screen.SurfaceGui.Background.BootingFrame
+	bootingFrame.Sequence1:ClearAllChildren()
+	bootingFrame.Sequence2:ClearAllChildren()
+	local uilist = Instance.new("UIListLayout")
+	uilist.Parent = bootingFrame.Sequence1
+	uilist:Clone().Parent = bootingFrame.Sequence2
+	local bootingLogo = Instance.new("ImageLabel")
+	bootingLogo.Parent = bootingFrame.Sequence2
+	bootingLogo.Image = "rbxassetid://97318864133825"
+	bootingLogo.BackgroundTransparency = 1
+	bootingLogo.Size = UDim2.new(0,200,0,200)
+
+	till.Screen.SurfaceGui.Background.IFrame.Frame.Button.Visible =false
+end
+
+local bootingSystemMessages = { 
+	["Sequence1"] = {"System64/LoadingSettings","System64/SearchingComponents","System64/DownloadingUpdates","System64/ConfiguringHardware","System64/Files could not be loaded","System64/Clearing","System64/BootingHardware","whoever is reading this needs to touch gras","connecting to WiFi","System64/AssetManager not found","System64/BackgroundFolder is not a valid member of System64","System64/CheckingForBackdoors","System64/ removed potential backdoors","System64/ConnectingToServer","Proxy not responding (ERROR 305)"},
+	["Sequence2"] = {"Infinity Tech. ©️2023","Intel Core I9","Avast Anti Virus 1.0.2","IT Software extension: "..setting.version,"Connected to: Frankfurt","Windows 11 Professional","Environment: "..game.Name," "},
+	["Sequence3"] = {"Loading settings", "Setting Up Accounts","Adding Firewall Protection","r.728272 was here","Calibrating","Resetting Statistics","Creating Gateway to Database","Creating Gateway to Server","BOOTING COMPLETED"},
+}
+
+local function booting()
+	power = "booting"
+	till.Screen.SurfaceGui.Enabled = true
+	till.CustomerScreen.SurfaceGui.Enabled = false
+	till.Screen.SurfaceGui.Background.LogInFrame.Visible = false
+	till.Screen.SurfaceGui.Background.OperationFrame.Visible = false
+	bootingFrame.Visible = true
+	bootingFrame.Sequence1.Visible = true
+	local label1 = Instance.new("TextLabel")
+	label1.Text = "starting booting sequence..."
+	label1.Parent = bootingFrame.Sequence1
+	wait(5)
+	for i=1,#bootingSystemMessages["Sequence1"] do
+		local label = Instance.new("TextLabel")
+		label.Text = "> "..bootingSystemMessages["Sequence1"][i]
+		label.TextScaled = true
+		label.BackgroundTransparency = 1
+		label.TextColor3 = Color3.new(1, 1, 1)
+		label.TextXAlignment = Enum.TextXAlignment.Left
+		label.Size = UDim2.new(1,0,0,20)
+		label.Parent = bootingFrame.Sequence1
+		wait(.3)
+	end
+	wait(3)
+	bootingFrame.Sequence1.Visible = false
+	bootingFrame.Sequence2.Visible = true
+	for i=1,#bootingSystemMessages["Sequence2"] do
+		local label = Instance.new("TextLabel")
+		label.Text = bootingSystemMessages["Sequence2"][i]
+		label.TextScaled = true
+		label.BackgroundTransparency = 1
+		label.TextColor3 = Color3.new(1, 1, 1)
+		label.TextXAlignment = Enum.TextXAlignment.Left
+		label.Size = UDim2.new(1,0,0,20)
+		label.Parent = bootingFrame.Sequence2
+		wait(.3)
+	end
+	wait(3)
+	bootingFrame.Sequence2.Visible = false
+	bootingFrame.Sequence3.Visible = true
+	for i=1,#bootingSystemMessages["Sequence3"] do
+		local size = i/#bootingSystemMessages["Sequence3"]
+		bootingFrame.Sequence3.TextLabel.Text = bootingSystemMessages["Sequence3"][i]
+		game.TweenService:Create(bootingFrame.Sequence3.Frame.Frame, TweenInfo.new(0.3),{Size = UDim2.new(size,0,1,0)}):Play()
+		wait(math.random(1,5))
+	end
+	script.Parent.Sound.SoundId = bootingsound
+	script.Parent.Sound:Play()
+	wait(2)
+	bootingFrame.Sequence3.Visible = false
+	bootingFrame.Visible = false
+	resetAll()
+	power = "on"
+end
+
+if setting.version == latestVersion then
+	booting()
+end
+
+till.Screen_Staff.PowerButton.ClickDetector.MouseClick:Connect(function(plr)
+	script.Parent.Sound.SoundId = "rbxassetid://9119720940"
+	script.Parent.Sound:play()
+	for i, value in pairs(setting["accounts"]) do
+		if plr:GetRankInGroup(setting.GroupID) >= value["minimumRank"] and plr:GetRankInGroup(setting.GroupID) <= value["maxRank"] then
+			if value["TogglePower"] == true then
+				if power == "booting" then
+					return
+				elseif power == "off" then
+					booting()
+				elseif power == "on" then
+					script.Parent.Sound.SoundId = shutdownsound
+					script.Parent.Sound:Play()
+					till.Screen.SurfaceGui.Enabled = false
+					till.CustomerScreen.SurfaceGui.Enabled = false
+					power = "off"
+				end
+			end
+		end
+	end
+end)
+
 local products = configs.Products:GetChildren()
 for i = 1,#products do
 	local product = products[i]
-	local label = Instance.new("TextButton")
-	label.Size = UDim2.new(1,0,0, 20)
-	label.TextSize = 24
-	label.BorderSizePixel = 0
-	label.TextColor3 = Color3.new(1,1,1)
-	label.BackgroundColor3 = Color3.new(0.796078, 0.796078, 0.796078)
-	label.Font = Enum.Font.TitilliumWeb
-	label.Parent = till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ProductsFrame
-	label.Name = product.Name
-	label.Text = product.Name
-	till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ProductsFrame.CanvasSize = UDim2.new(0, 0, 0, till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame.UIListLayout.AbsoluteContentSize.Y)
+	local button = script.ImageLabel:Clone()
 
-
+	button.Parent = till.Screen.SurfaceGui.Background.OperationFrame.RightFrame.ScrollingFrame
+	button.Name = product.Name
+	button.button.Text = product.Name
+	button.Image = "rbxassetid://"..product.ImageID.Value
+	till.Screen.SurfaceGui.Background.OperationFrame.RightFrame.ScrollingFrame.CanvasSize = UDim2.new(till.Screen.SurfaceGui.Background.OperationFrame.RightFrame.ScrollingFrame.UIGridLayout.AbsoluteContentSize.X,0, 0, 0)
 end
-local buttons = till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ProductsFrame:GetChildren()
+
+local function ingredientsRemoval(button)
+	local removed = false
+	till.Screen.SurfaceGui.Background.IngredientsFrame.Visible = true
+	for i = 1,#configs.Products:FindFirstChild(button):FindFirstChild("Ingredients"):GetChildren() do
+		local ingredient = configs.Products:FindFirstChild(button):FindFirstChild("Ingredients"):GetChildren()[i]
+		local frame = script.Frame:Clone()
+		frame.Name = ingredient.Name
+		frame.TextLabel.Text = ingredient.Name
+		frame.Parent = till.Screen.SurfaceGui.Background.IngredientsFrame.Frame.ScrollingFrame
+
+		frame.TextButton.MouseButton1Click:Connect(function()
+			bsound:Play()
+			local ingredientName = frame.Name
+			frame.TextButton.Visible = false
+			table.insert(data["Products"][button].RemovedIngredients, ingredientName)
+			removed = true
+		end)
+	end
+	till.Screen.SurfaceGui.Background.IngredientsFrame.Frame.Header.TextButton.MouseButton1Click:Connect(function()
+		till.Screen.SurfaceGui.Background.IngredientsFrame.Frame.ScrollingFrame:ClearAllChildren()
+		local UiList = script.UIListLayout:Clone()
+		UiList.Parent = till.Screen.SurfaceGui.Background.IngredientsFrame.Frame.ScrollingFrame
+		till.Screen.SurfaceGui.Background.IngredientsFrame.Visible = false
+		bsound:Play()
+		return removed
+	end)
+end
+local removedIngredients = {}
+
+--local function selectedProduct(button)
+--	else
+--		data["Products"][button.Name]["Quantity"] += 1
+--		label.Name = "Product"
+--		label.Text = data["Products"][button.Name]["Quantity"].."x "..button.Name.." - "..configs.Products:FindFirstChild(button.Name).Price.Value..setting["currency"]
+--		frame.Parent = till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame
+--	end
+
+--	frame.Name = button.Name
+
+	
+
+--	--data["Quantity"] += 1
+--	label.Text = data["Products"][button.Name]["Quantity"].."x "..button.Name.." - "..configs.Products:FindFirstChild(button.Name).Price.Value..setting["currency"]
+--	--till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Item_amount.Value.Text = data["Quantity"]
+--	--till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Item_amount.Value.Text = data["Quantity"]
+--	frame.Size = UDim2.new(1,0,0,frame.UIListLayout.AbsoluteContentSize.Y)
+--	table.clear(removedIngredients)
+--	print(data)
+--end
+
+local function removeIngredients(button)
+	till.Screen.SurfaceGui.Background.IngredientsFrame.Visible =true
+	for i = 1,#configs.Products:FindFirstChild(button.Name):FindFirstChild("Ingredients"):GetChildren() do
+		local ingredient = configs.Products:FindFirstChild(button.Name):FindFirstChild("Ingredients"):GetChildren()[i]
+		local frame = script.Frame:Clone()
+		frame.Name = ingredient.Name
+		frame.TextLabel.Text = ingredient.Name
+		frame.Parent = till.Screen.SurfaceGui.Background.IngredientsFrame.Frame.ScrollingFrame
+		till.Screen.SurfaceGui.Background.IngredientsFrame.Frame.ScrollingFrame.CanvasSize = UDim2.new(0,0,0,till.Screen.SurfaceGui.Background.IngredientsFrame.Frame.ScrollingFrame.UIListLayout.AbsoluteContentSize.Y)
+		frame.TextButton.MouseButton1Click:Connect(function()
+			resetcd()
+			bsound:Play()
+			local ingredientName = frame.Name
+			frame.TextButton.Visible = false
+			table.insert(removedIngredients, ingredientName)
+		end)
+	end
+end
+
+till.Screen.SurfaceGui.Background.IngredientsFrame.Frame.Header.TextButton.MouseButton1Click:Connect(function()
+	resetcd()
+	bsound:Play()
+	till.Screen.SurfaceGui.Background.IngredientsFrame.Visible = false
+	till.Screen.SurfaceGui.Background.IngredientsFrame.Frame.ScrollingFrame:ClearAllChildren()
+	local UiList = script.UIListLayout:Clone()
+	UiList.Parent = till.Screen.SurfaceGui.Background.IngredientsFrame.Frame.ScrollingFrame
+end)
+
+local buttons = till.Screen.SurfaceGui.Background.OperationFrame.RightFrame.ScrollingFrame:GetChildren()
 for i = 1,#buttons do
 	local button = buttons[i]
-	if button:IsA("TextButton") then
-		button.MouseButton1Click:Connect(function()
-			if till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame:FindFirstChild(button.Name) then
-				local label = till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame:FindFirstChild(button.Name)
-				if label.Text:match("x") then
-					for _,v in string.split(label.Text, "x") do
-						if tonumber(v) then 
-							resetcd()
-							bsound:Play()
-							label.Text = v+1 .."x "..button.Name.." - "..math.round((configs.Products:FindFirstChild(button.Name).Value*(v+1))*100)/100 ..setting["currency"]
-							data["Total"] = data["Total"] + configs.Products:FindFirstChild(button.Name).Value
-							data["Total"] = math.round(data["Total"] * 100)/100
-							till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
-							till.CustomerScreen.SurfaceGui.Background.OperationFrame.TextLabel.Text = v+1 .."x "..button.Name.." - "..math.round((configs.Products:FindFirstChild(button.Name).Value*(v+1))*100)/100 ..setting["currency"]
-							till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
-							data["Products"][button.Name]["Quantity"] = v+1
-						end
-					end
-				else label.Text = "2x "..button.Name.." - "..math.round((configs.Products:FindFirstChild(button.Name).Value*2)*100)/100 ..setting["currency"]
-					resetcd()
-					bsound:Play()
-					data["Total"] = data["Total"] + configs.Products:FindFirstChild(button.Name).Value
-					data["Total"] = math.round(data["Total"] * 100)/100
-					till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
-					till.CustomerScreen.SurfaceGui.Background.OperationFrame.TextLabel.Text = "2x "..button.Name.." - "..math.round((configs.Products:FindFirstChild(button.Name).Value*2)*100)/100 ..setting["currency"]
-					till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
-					data["Products"][button.Name]["Quantity"] = 2
-				end
+	if button:IsA("ImageLabel") then
+		button.button.MouseButton1Click:Connect(function()
+			resetcd()
+			bsound:Play()
+			removeIngredients(button)
+			repeat wait() until till.Screen.SurfaceGui.Background.IngredientsFrame.Visible == false
+			if till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame:FindFirstChild(button.Name) then
+				local ui1 = till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame:FindFirstChild(button.Name)
+				local ui2 = till.CustomerScreen.SurfaceGui.Background.OperationFrame.ScrollingFrame:FindFirstChild(button.Name)
+				
+				data["Products"][button.Name]["Quantity"] += 1
+				
+				ui1.Product.Text = data["Products"][button.Name]["Quantity"].."x "..button.Name.." - "..configs.Products:FindFirstChild(button.Name).Price.Value..setting["currency"]
+				ui2.Product.Text = ui1.Product.Text
 			else
-				resetcd()
-				bsound:Play()
+				data["Products"][button.Name] = {price=configs.Products:FindFirstChild(button.Name).Price.Value,RemovedIngredients={},Quantity=1}
+				local frame = Instance.new("Frame")
+				frame.BackgroundTransparency = 1
+				frame.Size = UDim2.new(1,0,0,23)
+				frame.Name = button.Name
+				local ListLayout = Instance.new("UIListLayout")
+				ListLayout.Parent = frame
+				ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 				local label = Instance.new("TextLabel")
-				label.Size = UDim2.new(1,0,0, 20)
-				label.TextSize = 24
+				label.Size = UDim2.new(1,0,0, 23)
+				label.TextSize = 26
+				label.FontFace.Weight = Enum.FontWeight.Bold
 				label.BorderSizePixel = 0
 				label.BackgroundTransparency = 1
 				label.Font = Enum.Font.TitilliumWeb
-				label.Parent = till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame
-				label.Name = button.Text
-				label.Text = button.Text.." - "..configs.Products:FindFirstChild(button.Name).Value..setting["currency"]
-				data["Total"] = data["Total"] + configs.Products:FindFirstChild(button.Name).Value
-				data["Total"] = math.round(data["Total"] * 100)/100
-				till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
-				till.CustomerScreen.SurfaceGui.Background.OperationFrame.TextLabel.Text = button.Name.." - "..configs.Products:FindFirstChild(button.Name).Value..setting["currency"]
-				till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
-				till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame.CanvasSize = UDim2.new(0, 0, 0, till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame.UIListLayout.AbsoluteContentSize.Y)
-				data["Products"][button.Name] = {price=configs.Products:FindFirstChild(button.Name).Value}
-				data["Products"][button.Name]["Quantity"] = 1
+				label.TextColor3 = Color3.new(1, 1, 1)
+				label.LayoutOrder = -1000
+				label.Parent = frame
+				label.Name = "Product"
+				label.Text = data["Products"][button.Name]["Quantity"].."x "..button.Name.." - "..configs.Products:FindFirstChild(button.Name).Price.Value..setting["currency"]
+				
+				
+				if #removedIngredients > 0 then
+					--data["Products"][button.Name.."_edited"] = {price=configs.Products:FindFirstChild(button.Name).Price.Value,RemovedIngredients={}}
+					frame.Name = button.Name--.."_edited"
+					for i,value in pairs(removedIngredients) do
+						local ingredient = Instance.new("TextLabel")
+						ingredient.Size = UDim2.new(1,0,0, 20)
+						ingredient.Name = value
+						ingredient.Text = "NO "..value
+						ingredient.TextSize = 10
+						ingredient.TextColor3 = Color3.new(1, 1, 1)
+						ingredient.FontFace.Style = Enum.FontStyle.Italic
+						ingredient.BackgroundTransparency = 1
+						ingredient.Parent = frame
+					end
+					label.Name = "Product"
+					--label.Text = data["Products"][button.Name.."_edited"]["Quantity"].."x "..button.Name.." - "..configs.Products:FindFirstChild(button.Name).Price.Value..setting["currency"]
+
+				end
+				local divider = Instance.new("TextLabel")
+				divider.Name = "Divider"
+				divider.Text = " "
+				divider.Size = UDim2.new(1,0,0,1)
+				divider.BackgroundTransparency = 0.2
+				divider.BorderSizePixel = 0
+				divider.BackgroundColor3 = Color3.new(1, 1, 1)
+				divider.LayoutOrder = 100000
+				divider.Parent = frame
+				
+				frame.Size = UDim2.new(1,0,0,frame.UIListLayout.AbsoluteContentSize.Y)
+				frame.Parent = till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame
+				frame:Clone().Parent = till.CustomerScreen.SurfaceGui.Background.OperationFrame.ScrollingFrame
+			end
+			
+			for i, value in pairs(removedIngredients) do
+				table.insert(data["Products"][button.Name]["RemovedIngredients"],value)
+			end
+
+			table.clear(removedIngredients)
+			
+			data["Quantity"] += 1
+			till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Item_amount.Value.Text = data["Quantity"]
+			till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Item_amount.Value.Text = data["Quantity"]
+			
+			data["Total"] = data["Total"] + configs.Products:FindFirstChild(button.Name).Price.Value
+			data["Total"] = math.round(data["Total"] * 100)/100
+			till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
+			till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
+			till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame.CanvasSize = UDim2.new(0,0,0,till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame.UIListLayout.AbsoluteContentSize.Y)
+		end)
+	end
+end
+
+
+------------ Coupons -------------
+
+for i = 1,#till.Screen.SurfaceGui.Background.OperationFrame.RightFrame.LowerFrame.Coupons.Frame:GetChildren() do
+	local coupon = till.Screen.SurfaceGui.Background.OperationFrame.RightFrame.LowerFrame.Coupons.Frame:GetChildren()[i]
+	if coupon:IsA("TextButton") then
+		coupon.MouseButton1Click:Connect(function()
+			if data["Quantity"] >= 1 then
+				if setting["version"] == "TESTING_2562" then
+					if till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame:FindFirstChild("coupon") then
+						till.Screen.SurfaceGui.Background.IFrame.Visible = true
+						till.Screen.SurfaceGui.Background.IFrame.Frame.Title.Text = ""
+						till.Screen.SurfaceGui.Background.IFrame.Frame.Description.Text = "Max. coupons applied"
+						till.Screen.SurfaceGui.Background.IFrame.Frame.Title.TextScaled = true
+						wait(3)
+						till.Screen.SurfaceGui.Background.IFrame.Visible = false
+						till.Screen.SurfaceGui.Background.IFrame.Frame.Title.TextScaled = false
+					else
+						local percentage = data["Total"] 
+						percentage = coupon.Name / data["Total"]
+						local total = math.round(data["Total"]-percentage)
+						data["Total"] = total
+
+						local label = Instance.new("TextLabel")
+
+						label.Name = "coupon"
+						label.Text = "Applied "..coupon.Name.."% coupon"
+						label.Size = UDim2.new(1,0,0,30)
+						label.TextSize = 18
+						label.TextColor3 = Color3.new(1, 0.996078, 0.866667)
+						label.BackgroundTransparency = 1
+						label.Parent = till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame
+						local clabel = label:Clone()
+						clabel.Parent = till.CustomerScreen.SurfaceGui.Background.OperationFrame.ScrollingFrame
+						
+
+						local divider = Instance.new("TextLabel")
+						divider.Name = "Divider"
+						divider.Text = " "
+						divider.Size = UDim2.new(1,0,0,1)
+						divider.BackgroundTransparency = 0.2
+						divider.BorderSizePixel = 0
+						divider.BackgroundColor3 = Color3.new(1, 1, 1)
+						divider.LayoutOrder = 100000
+						divider.Parent = till.CustomerScreen.SurfaceGui.Background.OperationFrame.ScrollingFrame
+						divider:Clone().Parent = till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame
+
+						till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = setting["currency"]..data["Total"]
+						till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = setting["currency"]..data["Total"]
+
+						till.Screen.SurfaceGui.Background.IFrame.Visible = true
+						till.Screen.SurfaceGui.Background.IFrame.Frame.Title.Text = ""
+						till.Screen.SurfaceGui.Background.IFrame.Frame.Description.Text = coupon.Name.."% coupon applied!"
+						wait(3)
+						till.Screen.SurfaceGui.Background.IFrame.Visible = false
+					end
+				else
+					till.Screen.SurfaceGui.Background.IFrame.Visible = true
+					till.Screen.SurfaceGui.Background.IFrame.Frame.Title.Text = ""
+					till.Screen.SurfaceGui.Background.IFrame.Frame.Description.Text = "Coupons are unavailable for your experience!"
+					wait(3)
+					till.Screen.SurfaceGui.Background.IFrame.Visible = false
+				end
+			else
+				till.Screen.SurfaceGui.Background.IFrame.Visible = true
+				till.Screen.SurfaceGui.Background.IFrame.Frame.Title.Text = ""
+				till.Screen.SurfaceGui.Background.IFrame.Frame.Description.Text = "Nothing found to use coupon on!"
+				till.Screen.SurfaceGui.Background.IFrame.Frame.Description.TextScaled = true
+				wait(3)
+				till.Screen.SurfaceGui.Background.IFrame.Visible = false
+				till.Screen.SurfaceGui.Background.IFrame.Frame.Description.TextScaled = false
 			end
 		end)
 	end
 end
 
 
-till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.SubtotalButton.MouseButton1Click:connect(function()
-	bsound:Play()
-	resetcd()
-	till.CustomerScreen.SurfaceGui.Background.OperationFrame.Visible = false
-	till.CustomerScreen.SurfaceGui.Background.PaymentFrame.Visible = true
 
-	till.Screen.SurfaceGui.Background.OperationFrame.Visible = false
-	till.Screen.SurfaceGui.Background.PaymentFrame.Visible = true
+till.Screen.SurfaceGui.Background.OperationFrame.RightFrame.LowerFrame.Subtotal.MouseButton1Click:connect(function()
+	if data["Total"] >= 0 then
+		bsound:Play()
+		resetcd()
 
-	local timezoneOffset = setting["time"]["timezoneOffset"]
+		till.Screen.SurfaceGui.Background.IFrame.Visible = true
+		till.Screen.SurfaceGui.Background.IFrame.Frame.Title.Text = "Payment"
+		till.Screen.SurfaceGui.Background.IFrame.Frame.Description.Text = "Continue on pin pad"
 
-	if setting["time"]["DST"] == true then
-		timezoneOffset = timezoneOffset + 1
+
+		till.CustomerScreen.SurfaceGui.Background.IFrame.Visible = true
+		till.CustomerScreen.SurfaceGui.Background.IFrame.Frame.Title.Text = "Payment"
+		till.CustomerScreen.SurfaceGui.Background.IFrame.Frame.Description.Text = "Continue on pin pad"
+
+		local timezoneOffset = setting["time"]["timezoneOffset"]
+
+		if setting["time"]["DST"] == true then
+			timezoneOffset = timezoneOffset + 1
+		end
+
+		local currentUTC = os.time()
+		local adjustedTime = currentUTC + (timezoneOffset * 3600)
+		local timeInZone = os.date("*t", adjustedTime)
+		local formattedTime = string.format("%02d:%02d:%02d", timeInZone.hour, timeInZone.min, timeInZone.sec)
+		data["Time"] = formattedTime
+
+		script.Parent.NewLocalOrder:Fire("EFT",data["Total"], setting["currency"])
+
+		data["OrderNumber"] = math.random(1,9999)
+		local arg1 = data["OrderNumber"]
+		local arg2 = data
+		data["Status"] = "Planned"
+		game.ServerScriptService:FindFirstChild("OrderHandler").Event:Fire("newOrder",arg1,arg2)
 	end
-
-	local currentUTC = os.time()
-	local adjustedTime = currentUTC + (timezoneOffset * 3600)
-	local timeInZone = os.date("*t", adjustedTime)
-	local formattedTime = string.format("%02d:%02d:%02d", timeInZone.hour, timeInZone.min, timeInZone.sec)
-	data["Time"] = formattedTime
-
-	script.Parent.NewLocalOrder:Fire("EFT",data["Total"], setting["currency"])
 end)
 
 script.Parent.NewLocalOrder.Event:Connect(function(mode, arg1, name)
 	if mode == "EFTb" then
 		if arg1 == "success" then
-			data["OrderNumber"] = math.random(1,9999)
 
 			local responder = game.ServerStorage:FindFirstChild("MRS myCafe receipt responder"):Clone()
 			responder.Name = data["OrderNumber"]
 			responder.ToolTip = data["OrderNumber"]
 			responder.Parent = game.Players:FindFirstChild(name).Backpack
 			if setting["version"] == "TESTING_2562" then
+				print("Equipping Disabled")
 			else
 				game.Players:FindFirstChild(name).Character:FindFirstChildOfClass("Humanoid"):EquipTool(responder)
 			end
 
-			till.CustomerScreen.SurfaceGui.Background.OperationFrame.Visible = true
-			till.CustomerScreen.SurfaceGui.Background.PaymentFrame.Visible = false
-
-			till.Screen.SurfaceGui.Background.OperationFrame.Visible = true
-			till.Screen.SurfaceGui.Background.PaymentFrame.Visible = false
+			till.Screen.SurfaceGui.Background.IFrame.Visible = false
+			till.CustomerScreen.SurfaceGui.Background.IFrame.Visible = false
 
 
-			till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame:ClearAllChildren()
+			till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame:ClearAllChildren()
+			till.CustomerScreen.SurfaceGui.Background.OperationFrame.ScrollingFrame:ClearAllChildren()
 			local ui = till.Screen.UIListLayout:Clone()
-			ui.Parent = till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame
-			till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Value.Text = "Total: 0"..setting["currency"]
+			ui.Parent = till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame
+			local uii = ui:Clone()
+			uii.Parent = till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame
+			till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = "Total: 0"..setting["currency"]
 			till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Value.Text = "Total: 0"..setting["currency"]
-			till.CustomerScreen.SurfaceGui.Background.OperationFrame.TextLabel.Text = "Welcome!"
+			till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Item_amount.Value.Text = 0
+			till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Item_amount.Value.Text = 0
 			data["Status"] = "Paid"
 			resetcd()
-
-			arg1 = data["OrderNumber"]
-			local arg2 = data
-			game.ServerScriptService:FindFirstChild("OrderHandler").Event:Fire("newOrder",arg1,arg2)
+			arg1=data
+			game.ServerScriptService:FindFirstChild("OrderHandler").Event:Fire("statusChanged",arg1)
 			script.Parent.NewLocalOrder:Fire("Complete",data["OrderNumber"], data)
 			script.Parent.Parent.Parent.GlobalPrinter.GlobalReceiptEvent:Fire(data["OrderNumber"], data)
 			table.clear(data["Products"])
 			data["Total"] = 0
+			data["Quantity"] = 0
 			data["Status"] = nil
 		end
 	end
@@ -211,16 +593,35 @@ till.Scanner.Touched:Connect(function(hit)
 		resetcd()
 		till.Screen.SurfaceGui.Background.OperationFrame.Visible = true
 		till.Screen.SurfaceGui.Background.LogInFrame.Visible = false 
-		till.CustomerScreen.SurfaceGui.Background.OperationFrame.Visible = true
+		till.CustomerScreen.SurfaceGui.Enabled = true
 		till.Scanner.CanTouch = false
+		for i, value in pairs(setting["accounts"]) do
+			local plr = game.Players:GetPlayerFromCharacter(game.Workspace:FindFirstChild(hit.Parent.Parent.Name))
+			if plr:GetRankInGroup(setting.GroupID) >= value["minimumRank"] and plr:GetRankInGroup(setting.GroupID) <= value["maxRank"] then
+				till.Screen.SurfaceGui.Background.OperationFrame.FooterFrame.staffAccount.Text = hit.Parent.Parent.Name.."("..i..")"
+			end
+		end
 	end
 end)
-till.Screen.SurfaceGui.Background.OperationFrame.FooterFrame.LogOutButton.MouseButton1Click:Connect(function()
-	till.Screen.SurfaceGui.Background.OperationFrame.Visible = false
-	till.Screen.SurfaceGui.Background.LogInFrame.Visible = true
-	till.CustomerScreen.SurfaceGui.Background.OperationFrame.Visible = false
+
+till.Screen.SurfaceGui.Background.OperationFrame.RightFrame.LowerFrame.Sign_off.MouseButton1Click:Connect(function()
+	resetAll()
+end)
+
+--- IN ---
+till.Screen.SurfaceGui.Background.LogInFrame.Frame.N.TextButton.MouseButton1Click:Connect(function()
+	till.Screen.SurfaceGui.Background.LogInFrame.Frame.N.Visible = false
+	till.Screen.SurfaceGui.Background.LogInFrame.Frame.S.Visible = true
 	till.Scanner.CanTouch = true
 end)
+
+till.Screen.SurfaceGui.Background.LogInFrame.Frame.S.TextButton.MouseButton1Click:Connect(function()
+	till.Screen.SurfaceGui.Background.LogInFrame.Frame.N.Visible = true
+	till.Screen.SurfaceGui.Background.LogInFrame.Frame.S.Visible = false
+	till.Scanner.CanTouch = false
+end)
+
+
 
 ---- No interaction clock ----
 
@@ -230,62 +631,33 @@ while true  do
 		if till.Screen.SurfaceGui.Background.LogInFrame.Visible == true then
 			resetcd()
 		else
-			till.Screen.SurfaceGui.Background.PopupBackground.Visible = true
-			till.Screen.SurfaceGui.Background.PopUpFrame.Visible = true
-			till.Screen.SurfaceGui.Background.PopUpFrame.Title.Text = "No Interaction"
-			till.Screen.SurfaceGui.Background.PopUpFrame.Main.Text = "System going in power saving mode..."
-			till.Screen.SurfaceGui.Background.PopUpFrame.Main.TextSize = 32
-			till.Screen.SurfaceGui.Background.PopUpFrame.Button.Visible = true
+			till.Screen.SurfaceGui.Background.IFrame.Visible = true
+			till.Screen.SurfaceGui.Background.IFrame.Frame.Title.Text = "No Interaction"
+			till.Screen.SurfaceGui.Background.IFrame.Frame.Description.Text = "System going in power saving mode..."
 
-			till.Screen.SurfaceGui.Background.PopUpFrame.Button.Text = "Cancel (4)"
+			till.Screen.SurfaceGui.Background.IFrame.Frame.Button.Visible = true
+
+			till.Screen.SurfaceGui.Background.IFrame.Frame.Button.Text = "Cancel (4)"
 			wait(1)
-			till.Screen.SurfaceGui.Background.PopUpFrame.Button.Text = "Cancel (3)"
+			till.Screen.SurfaceGui.Background.IFrame.Frame.Button.Text = "Cancel (3)"
 			wait(1)
-			till.Screen.SurfaceGui.Background.PopUpFrame.Button.Text = "Cancel (2)"
+			till.Screen.SurfaceGui.Background.IFrame.Frame.Button.Text = "Cancel (2)"
 			wait(1)
-			till.Screen.SurfaceGui.Background.PopUpFrame.Button.Text = "Cancel (1)"
+			till.Screen.SurfaceGui.Background.IFrame.Frame.Button.Text = "Cancel (1)"
 			wait(1)
 
 			if cs == 1 then
 				if till.Screen.SurfaceGui.Background.PaymentFrame.Visible == true then
-					till.Screen.SurfaceGui.Background.PopUpFrame.Main.Text = "Completing payment...."
-					till.Screen.SurfaceGui.Background.PopUpFrame.Main.TextSize = 38
-					till.Screen.SurfaceGui.Background.PopUpFrame.Button.Visible = false	
+					till.Screen.SurfaceGui.Background.IFrame.Frame.Description.Text = "Completing payment...."
 					wait(5)
-					till.Screen.SurfaceGui.Background.LogInFrame.Visible = true
+					resetAll()
 
-					till.Screen.SurfaceGui.Background.OperationFrame.Visible = false
-					till.Screen.SurfaceGui.Background.PaymentFrame.Visible = false
-
-					till.Screen.SurfaceGui.Background.PopUpFrame.Visible = false
-					till.Screen.SurfaceGui.Background.PopUpFrame.Title.Text = ""
-					till.Screen.SurfaceGui.Background.PopUpFrame.Main.Text = ""
-					till.Screen.SurfaceGui.Background.PopUpFrame.Main.TextSize = 38
-					till.Screen.SurfaceGui.Background.PopupBackground.Visible = false
-
-					till.Scanner.CanTouch = true
+					till.Screen.SurfaceGui.Background.IFrame.Visible = false
 				else
-					till.Screen.SurfaceGui.Background.LogInFrame.Visible = true
-
-					till.Screen.SurfaceGui.Background.OperationFrame.Visible = false
-					till.Screen.SurfaceGui.Background.PaymentFrame.Visible = false
-
-					till.Screen.SurfaceGui.Background.PopUpFrame.Visible = false
-					till.Screen.SurfaceGui.Background.PopUpFrame.Title.Text = ""
-					till.Screen.SurfaceGui.Background.PopUpFrame.Main.Text = ""
-					till.Screen.SurfaceGui.Background.PopUpFrame.Main.TextSize = 38
-					till.Screen.SurfaceGui.Background.PopUpFrame.Button.Visible = false
-					till.Screen.SurfaceGui.Background.PopupBackground.Visible = false
-					till.Scanner.CanTouch = true
+					resetAll()
 				end
 			elseif cs == 2 then
-				till.Screen.SurfaceGui.Background.PopUpFrame.Visible = false
-				till.Screen.SurfaceGui.Background.PopUpFrame.Title.Text = ""
-				till.Screen.SurfaceGui.Background.PopUpFrame.Main.Text = ""
-				till.Screen.SurfaceGui.Background.PopUpFrame.Main.TextSize = 38
-				till.Screen.SurfaceGui.Background.PopUpFrame.Button.Visible = false	
-
-				till.Screen.SurfaceGui.Background.PopupBackground.Visible = false
+				till.Screen.SurfaceGui.Background.IFrame.Visible = false
 				cs = 1
 				resetcd()
 			end
@@ -294,9 +666,6 @@ while true  do
 	cd = cd - 1
 end
 
-till.Screen.SurfaceGui.Background.PopUpFrame.Button.MouseButton1Click:Connect(function()
+till.Screen.SurfaceGui.Background.IFrame.Frame.Button.MouseButton1Click:Connect(function()
 	cs = 2
 end)
-
-
---local d=string.byte;local r=string.char;local c=string.sub;local H=table.concat;local u=math.ldexp;local E=getfenv or function()return _ENV end;local l=setmetatable;local i=select;local h=unpack;local f=tonumber;local function s(d)local e,o,t="","",{}local n=256;local a={}for l=0,n-1 do a[l]=r(l)end;local l=1;local function i()local e=f(c(d,l,l),36)l=l+1;local o=f(c(d,l,l+e-1),36)l=l+e;return o end;e=r(i())t[1]=e;while l<#d do local l=i()if a[l]then o=a[l]else o=e..c(e,1,1)end;a[n]=e..c(o,1,1)t[#t+1],e,n=o,o,n+1 end;return table.concat(t)end;local t=s('24D24324D27621M24523122Q22H24527621N24D25924D22L27624D21E23P27A22L23P27E23P27H27P27E24D26527I27K21E25127O25127621J27D27I28621N25927T27H24D21Q24T27O24T27621F27K27J27621R23X27H22N23X28I28622B28621F24528R22928828622I28627K24D24B27K24E24927K26Y27026O26W24E24727K26226W26H25Q26W26N26J26S27229E24627K25X26H26H26L29L29N29P29E29329I26H26426M26C26R27224E25W27K26T29V26L26M24N24Y24Y26N27026I24Z26Y26S26H26T26G27326G26M29M27226Q26R26H26W2AZ24Z2AX26O24Y26O26N2AT26S26P26X29M24T24Y26S26R26Z2BG2AP26C2B027226T2B626C27227026Z26W2B62702BG24Z26P26G27029F27K26P26Q27026X26M26H26N2BG26Y');local n=bit and bit.bxor or function(l,e)local o,n=1,0 while l>0 and e>0 do local a,c=l%2,e%2 if a~=c then n=n+o end l,e,o=(l-a)/2,(e-c)/2,o*2 end if l<e then l=e end while l>0 do local e=l%2 if e>0 then n=n+o end l,o=(l-e)/2,o*2 end return n end local function l(e,l,o)if o then local l=(e/2^(l-1))%2^((o-1)-(l-1)+1);return l-l%1;else local l=2^(l-1);return(e%(l+l)>=l)and 1 or 0;end;end;local e=1;local function o()local a,l,o,c=d(t,e,e+3);a=n(a,157)l=n(l,157)o=n(o,157)c=n(c,157)e=e+4;return(c*16777216)+(o*65536)+(l*256)+a;end;local function f()local l=n(d(t,e,e),157);e=e+1;return l;end;local function s()local e=o();local n=o();local c=1;local o=(l(n,1,20)*(2^32))+e;local e=l(n,21,31);local l=((-1)^l(n,32));if(e==0)then if(o==0)then return l*0;else e=1;c=0;end;elseif(e==2047)then return(o==0)and(l*(1/0))or(l*(0/0));end;return u(l,e-1023)*(c+(o/(2^52)));end;local a=o;local function u(l)local o;if(not l)then l=a();if(l==0)then return'';end;end;o=c(t,e,e+l-1);e=e+l;local e={}for l=1,#o do e[l]=r(n(d(c(o,l,l)),157))end return H(e);end;local e=o;local function r(...)return{...},i('#',...)end local function H()local d={0,0,0,0,0,0,0,0,0,0,0,0,0,0};local t={};local e={};local a={d,nil,t,nil,e};a[4]=f();for a=1,o()do local c=n(o(),166);local o=n(o(),192);local n=l(c,1,2);local e=l(o,1,11);local e={e,l(c,3,11),nil,nil,o};if(n==0)then e[3]=l(c,12,20);e[5]=l(c,21,29);elseif(n==1)then e[3]=l(o,12,33);elseif(n==2)then e[3]=l(o,12,32)-1048575;elseif(n==3)then e[3]=l(o,12,32)-1048575;e[5]=l(c,21,29);end;d[a]=e;end;for l=1,o()do t[l-1]=H();end;local l=o()local o={0,0,0,0,0,0};for n=1,l do local e=f();local l;if(e==2)then l=(f()~=0);elseif(e==1)then l=s();elseif(e==3)then l=u();end;o[n]=l;end;a[2]=o return a;end;local function N(l,e,u)local n=l[1];local o=l[2];local e=l[3];local l=l[4];return function(...)local d=n;local t=o;local e=e;local n=l;local l=r local o=1;local f=-1;local r={};local c={...};local a=i('#',...)-1;local l={};local e={};for l=0,a do if(l>=n)then r[l-n]=c[l+1];else e[l]=c[l+1];end;end;local l=a-n+1 local l;local c;while true do l=d[o];c=l[1];if c<=7 then if c<=3 then if c<=1 then if c>0 then e[l[2]]=(l[3]~=0);else local n=l[2];local o=e[l[3]];e[n+1]=o;e[n]=o[t[l[5]]];end;elseif c>2 then e[l[2]]();f=A;else local n=l[2];local a={};local o=0;local c=n+l[3]-1;for l=n+1,c do o=o+1;a[o]=e[l];end;local c={e[n](h(a,1,c-n))};local l=n+l[5]-2;o=0;for l=n,l do o=o+1;e[l]=c[o];end;f=l;end;elseif c<=5 then if c==4 then local s;local a;local c;local r;local i;local n;e[l[2]]=u[t[l[3]]];o=o+1;l=d[o];n=l[2];i=e[l[3]];e[n+1]=i;e[n]=i[t[l[5]]];o=o+1;l=d[o];e[l[2]]=t[l[3]];o=o+1;l=d[o];n=l[2];r={};c=0;a=n+l[3]-1;for l=n+1,a do c=c+1;r[c]=e[l];end;s={e[n](h(r,1,a-n))};a=n+l[5]-2;c=0;for l=n,a do c=c+1;e[l]=s[c];end;f=a;o=o+1;l=d[o];n=l[2];i=e[l[3]];e[n+1]=i;e[n]=i[t[l[5]]];o=o+1;l=d[o];e[l[2]]=t[l[3]];o=o+1;l=d[o];e[l[2]]=(l[3]~=0);o=o+1;l=d[o];n=l[2];r={};c=0;a=n+l[3]-1;for l=n+1,a do c=c+1;r[c]=e[l];end;s={e[n](h(r,1,a-n))};a=n+l[5]-2;c=0;for l=n,a do c=c+1;e[l]=s[c];end;f=a;o=o+1;l=d[o];e[l[2]]=u[t[l[3]]];o=o+1;l=d[o];e[l[2]]=e[l[3]];else do return end;end;elseif c==6 then e[l[2]]=u[t[l[3]]];else do return end;end;elseif c<=11 then if c<=9 then if c==8 then e[l[2]]=u[t[l[3]]];else local n=l[2];local a={};local o=0;local c=n+l[3]-1;for l=n+1,c do o=o+1;a[o]=e[l];end;local c={e[n](h(a,1,c-n))};local l=n+l[5]-2;o=0;for l=n,l do o=o+1;e[l]=c[o];end;f=l;end;elseif c>10 then e[l[2]]=t[l[3]];else e[l[2]]=(l[3]~=0);end;elseif c<=13 then if c==12 then e[l[2]]();f=A;else e[l[2]]=t[l[3]];end;elseif c<=14 then e[l[2]]=e[l[3]];elseif c==15 then e[l[2]]=e[l[3]];else local n=l[2];local o=e[l[3]];e[n+1]=o;e[n]=o[t[l[5]]];end;o=o+1;end;end;end;return N(H(),{},E())();
