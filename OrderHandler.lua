@@ -13,7 +13,8 @@ local function grantUi(orderNumber,plr)
 	UI.Name = orderNumber
 	UI.Frame.Draggable, UI.Frame.Active = true, true
 	UI.Frame.OrderNumber.Text = orderNumber
-
+	print(orders)
+	print(orders[orderNumber])
 	for i, value in pairs(orders[orderNumber]["Products"]) do
 		local textlabel = Instance.new("TextLabel")
 		textlabel.BackgroundTransparency = 1
@@ -23,7 +24,7 @@ local function grantUi(orderNumber,plr)
 		textlabel.Parent = UI.Frame.ScrollingFrame
 		textlabel.Size = UDim2.new(1,0,0,20)
 	end
-	UI.Frame.ScrollingFrame.CanvasSize = UDim2.new(UI.Frame.ScrollingFrame.UIListLayout.AbsoluteContentSize.X,0, 0, 0)
+	UI.Frame.ScrollingFrame.CanvasSize = UDim2.new(0,0, 0, UI.Frame.ScrollingFrame.UIListLayout.AbsoluteContentSize.Y)
 end
 local function removeUI(orderNumber,plr)
 	game.Players:FindFirstChild(plr).PlayerGui:FindFirstChild(orderNumber):Destroy()
@@ -114,26 +115,34 @@ script.Event.Event:Connect(function(info,arg1,arg2)
 			if value["Position"] == arg2 then
 				if value["Claimed"] == nil then
 					value["Claimed"] = arg1
-					local arg2 = arg1
+					--local arg2 = arg1
 					local info = "claimed"
-					script.Event:Fire(info,i, arg2)
-					grantUi(arg2,arg1)
+					script.Event:Fire(info,i, arg1)
+					grantUi(i,arg1)
 				elseif value["Claimed"] == arg1 then
 					if value["Status"] == "Paid" then
 						value["Status"]="Completed"
 						oe:Fire(i) 
-						removeUI(arg2,arg1)
+						removeUI(i,arg1)
 					end
 				end
 			end
 		end
 	elseif info == "claimOrder" then
-		if orders[arg2]["Claimed"] == nil then
-			orders[arg2]["Claimed"] = arg1
-			local info = "claimed"
-			script.Event:Fire(info,arg1, arg2)
-			grantUi(arg2,arg1)
+		for i, value in pairs(orders) do
+			print(i, arg1,arg2)
+			if i == arg2 then
+				print("yes")
+				if value["Claimed"] == nil then
+					orders[arg2]["Claimed"] = arg1
+					local info = "claimed"
+					script.Event:Fire(info,arg2, arg1)
+					grantUi(arg2,arg1)
+					print(orders)
+				end
+			end
 		end
+		
 	elseif info == "requestAllOrders" then
 		local info = "allOrders"
 		script.Event:Fire(info,orders)
