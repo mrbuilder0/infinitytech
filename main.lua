@@ -59,8 +59,8 @@ local pitch = Instance.new("PitchShiftSoundEffect")
 pitch.Octave = 2
 pitch.Parent = csound
 
-till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Text = "Total: 0"..setting["currency"]
-till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Text = "Total: 0"..setting["currency"]
+till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = "Total: 0"..setting["currency"]
+till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Value.Text = "Total: 0"..setting["currency"]
 
 local function resetcd()
 	cd = setting["timer"]
@@ -98,9 +98,9 @@ for i = 1,#buttons do
 							label.Text = v+1 .."x "..button.Name.." - "..math.round((configs.Products:FindFirstChild(button.Name).Value*(v+1))*100)/100 ..setting["currency"]
 							data["Total"] = data["Total"] + configs.Products:FindFirstChild(button.Name).Value
 							data["Total"] = math.round(data["Total"] * 100)/100
-							till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Text = "Total: "..data["Total"]..setting["currency"]
+							till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
 							till.CustomerScreen.SurfaceGui.Background.OperationFrame.TextLabel.Text = v+1 .."x "..button.Name.." - "..math.round((configs.Products:FindFirstChild(button.Name).Value*(v+1))*100)/100 ..setting["currency"]
-							till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Text = "Total: "..data["Total"]..setting["currency"]
+							till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
 							data["Products"][button.Name]["Quantity"] = v+1
 						end
 					end
@@ -109,9 +109,9 @@ for i = 1,#buttons do
 					bsound:Play()
 					data["Total"] = data["Total"] + configs.Products:FindFirstChild(button.Name).Value
 					data["Total"] = math.round(data["Total"] * 100)/100
-					till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Text = "Total: "..data["Total"]..setting["currency"]
+					till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
 					till.CustomerScreen.SurfaceGui.Background.OperationFrame.TextLabel.Text = "2x "..button.Name.." - "..math.round((configs.Products:FindFirstChild(button.Name).Value*2)*100)/100 ..setting["currency"]
-					till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Text = "Total: "..data["Total"]..setting["currency"]
+					till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
 					data["Products"][button.Name]["Quantity"] = 2
 				end
 			else
@@ -128,9 +128,9 @@ for i = 1,#buttons do
 				label.Text = button.Text.." - "..configs.Products:FindFirstChild(button.Name).Value..setting["currency"]
 				data["Total"] = data["Total"] + configs.Products:FindFirstChild(button.Name).Value
 				data["Total"] = math.round(data["Total"] * 100)/100
-				till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Text = "Total: "..data["Total"]..setting["currency"]
+				till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
 				till.CustomerScreen.SurfaceGui.Background.OperationFrame.TextLabel.Text = button.Name.." - "..configs.Products:FindFirstChild(button.Name).Value..setting["currency"]
-				till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Text = "Total: "..data["Total"]..setting["currency"]
+				till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
 				till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame.CanvasSize = UDim2.new(0, 0, 0, till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame.UIListLayout.AbsoluteContentSize.Y)
 				data["Products"][button.Name] = {price=configs.Products:FindFirstChild(button.Name).Value}
 				data["Products"][button.Name]["Quantity"] = 1
@@ -188,8 +188,8 @@ script.Parent.NewLocalOrder.Event:Connect(function(mode, arg1, name)
 			till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame:ClearAllChildren()
 			local ui = till.Screen.UIListLayout:Clone()
 			ui.Parent = till.Screen.SurfaceGui.Background.OperationFrame.UpperFrame.ChosenFrame
-			till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Text = "Total: 0"..setting["currency"]
-			till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Text = "Total: 0"..setting["currency"]
+			till.Screen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Value.Text = "Total: 0"..setting["currency"]
+			till.CustomerScreen.SurfaceGui.Background.OperationFrame.Total.Value.Text = "Total: 0"..setting["currency"]
 			till.CustomerScreen.SurfaceGui.Background.OperationFrame.TextLabel.Text = "Welcome!"
 			data["Status"] = "Paid"
 			resetcd()
