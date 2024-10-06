@@ -108,7 +108,6 @@ oe.Event:Connect(function(number)
 	script.Event:Fire("correction",orders)
 end)
 
-
 script.Event.Event:Connect(function(info,arg1,arg2)
 	if info == "claim" then
 		for i, value in pairs(orders) do
