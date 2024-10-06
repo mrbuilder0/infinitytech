@@ -1,12 +1,3 @@
---- BLACKLIST MODULE ---
-
---local code = game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/mrbuilder0/infinitytech/licensing/blacklist.lua", true)
---local f = loadstring(code)
---f()
-
-------------------------
-
-
 local bootingFrameModel = game:GetService("InsertService"):LoadAsset(137671745532852)
 bootingFrame = bootingFrameModel:FindFirstChild("BootingFrame")
 bootingFrame.Parent = script.Parent.Screen.SurfaceGui.Background
