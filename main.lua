@@ -1,5 +1,10 @@
 bootingFrame = script.Parent.Screen.SurfaceGui.Background.BootingFrame
 
+
+local bootingFrameModel = game:GetService("InsertService"):LoadAsset(137671745532852)
+bootingFrame = bootingFrameModel:FindFirstChild("BootingFrame")
+bootingFrame.Parent = script.Parent.Screen.SurfaceGui.Background
+
 local Parcel = require(9428572121)
 
 if Parcel:Whitelist("65f5883387fdde40053c4c98", "cqxvu449m2dibisp15270ya7sgtv") then
