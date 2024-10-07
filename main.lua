@@ -2,8 +2,7 @@ bootingFrame = script.Parent.Screen.SurfaceGui.Background.BootingFrame
 
 
 local bootingFrameModel = game:GetService("InsertService"):LoadAsset(137671745532852)
-bootingFrame = bootingFrameModel:FindFirstChild("BootingFrame")
-bootingFrame.Parent = script.Parent.Screen.SurfaceGui.Background
+bootingFrame = script.Parent.Screen.SurfaceGui.Background.BootingFrame
 
 local Parcel = require(9428572121)
 
