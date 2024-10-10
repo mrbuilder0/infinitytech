@@ -1,4 +1,4 @@
-local bootingFrameModel = script.Parent.Screen.SurfaceGui.Background.BootingFrame
+local bootingFrame = script.Parent.Screen.SurfaceGui.Background.BootingFrame
 
 local Parcel = require(9428572121)
 
