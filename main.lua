@@ -24,7 +24,7 @@ else
 	script:Destroy()
 end
 
-local latestVersion = "MYOS292493"
+local latestVersion = "MYOS141024"
 
 local setting = require(script.Parent.Parent.Parent.Configuration.Settings)
 local configs = script.Parent.Parent.Parent.Configuration
@@ -290,7 +290,7 @@ local removedIngredients = {}
 
 --	frame.Name = button.Name
 
-	
+
 
 --	--data["Quantity"] += 1
 --	label.Text = data["Products"][button.Name]["Quantity"].."x "..button.Name.." - "..configs.Products:FindFirstChild(button.Name).Price.Value..setting["currency"]
@@ -336,87 +336,89 @@ for i = 1,#buttons do
 		button.button.MouseButton1Click:Connect(function()
 			resetcd()
 			bsound:Play()
-			removeIngredients(button)
-			repeat wait() until till.Screen.SurfaceGui.Background.IngredientsFrame.Visible == false
-			if till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame:FindFirstChild(button.Name) then
-				local ui1 = till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame:FindFirstChild(button.Name)
-				local ui2 = till.CustomerScreen.SurfaceGui.Background.OperationFrame.ScrollingFrame:FindFirstChild(button.Name)
-				
-				data["Products"][button.Name]["Quantity"] += 1
-				
-				ui1.Product.Text = data["Products"][button.Name]["Quantity"].."x "..button.Name.." - "..configs.Products:FindFirstChild(button.Name).Price.Value..setting["currency"]
-				ui2.Product.Text = ui1.Product.Text
-			else
-				data["Products"][button.Name] = {price=configs.Products:FindFirstChild(button.Name).Price.Value,RemovedIngredients={},Quantity=1}
-				local frame = Instance.new("Frame")
-				frame.BackgroundTransparency = 1
-				frame.Size = UDim2.new(1,0,0,23)
-				frame.Name = button.Name
-				local ListLayout = Instance.new("UIListLayout")
-				ListLayout.Parent = frame
-				ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-				local label = Instance.new("TextLabel")
-				label.Size = UDim2.new(1,0,0, 23)
-				label.TextSize = 26
-				label.FontFace.Weight = Enum.FontWeight.Bold
-				label.BorderSizePixel = 0
-				label.BackgroundTransparency = 1
-				label.Font = Enum.Font.TitilliumWeb
-				label.TextColor3 = Color3.new(1, 1, 1)
-				label.LayoutOrder = -1000
-				label.Parent = frame
-				label.Name = "Product"
-				label.Text = data["Products"][button.Name]["Quantity"].."x "..button.Name.." - "..configs.Products:FindFirstChild(button.Name).Price.Value..setting["currency"]
-				
-				
-				if #removedIngredients > 0 then
-					--data["Products"][button.Name.."_edited"] = {price=configs.Products:FindFirstChild(button.Name).Price.Value,RemovedIngredients={}}
-					frame.Name = button.Name--.."_edited"
-					for i,value in pairs(removedIngredients) do
-						local ingredient = Instance.new("TextLabel")
-						ingredient.Size = UDim2.new(1,0,0, 20)
-						ingredient.Name = value
-						ingredient.Text = "NO "..value
-						ingredient.TextSize = 10
-						ingredient.TextColor3 = Color3.new(1, 1, 1)
-						ingredient.FontFace.Style = Enum.FontStyle.Italic
-						ingredient.BackgroundTransparency = 1
-						ingredient.Parent = frame
-					end
+			if configs.Products:FindFirstChild(button.Name).Available.Value == true then
+				removeIngredients(button)
+				repeat wait() until till.Screen.SurfaceGui.Background.IngredientsFrame.Visible == false
+				if till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame:FindFirstChild(button.Name) then
+					local ui1 = till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame:FindFirstChild(button.Name)
+					local ui2 = till.CustomerScreen.SurfaceGui.Background.OperationFrame.ScrollingFrame:FindFirstChild(button.Name)
+
+					data["Products"][button.Name]["Quantity"] += 1
+
+					ui1.Product.Text = data["Products"][button.Name]["Quantity"].."x "..button.Name.." - "..configs.Products:FindFirstChild(button.Name).Price.Value..setting["currency"]
+					ui2.Product.Text = ui1.Product.Text
+				else
+					data["Products"][button.Name] = {price=configs.Products:FindFirstChild(button.Name).Price.Value,RemovedIngredients={},Quantity=1}
+					local frame = Instance.new("Frame")
+					frame.BackgroundTransparency = 1
+					frame.Size = UDim2.new(1,0,0,23)
+					frame.Name = button.Name
+					local ListLayout = Instance.new("UIListLayout")
+					ListLayout.Parent = frame
+					ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+					local label = Instance.new("TextLabel")
+					label.Size = UDim2.new(1,0,0, 23)
+					label.TextSize = 26
+					label.FontFace.Weight = Enum.FontWeight.Bold
+					label.BorderSizePixel = 0
+					label.BackgroundTransparency = 1
+					label.Font = Enum.Font.TitilliumWeb
+					label.TextColor3 = Color3.new(1, 1, 1)
+					label.LayoutOrder = -1000
+					label.Parent = frame
 					label.Name = "Product"
-					--label.Text = data["Products"][button.Name.."_edited"]["Quantity"].."x "..button.Name.." - "..configs.Products:FindFirstChild(button.Name).Price.Value..setting["currency"]
+					label.Text = data["Products"][button.Name]["Quantity"].."x "..button.Name.." - "..configs.Products:FindFirstChild(button.Name).Price.Value..setting["currency"]
 
+
+					if #removedIngredients > 0 then
+						--data["Products"][button.Name.."_edited"] = {price=configs.Products:FindFirstChild(button.Name).Price.Value,RemovedIngredients={}}
+						frame.Name = button.Name--.."_edited"
+						for i,value in pairs(removedIngredients) do
+							local ingredient = Instance.new("TextLabel")
+							ingredient.Size = UDim2.new(1,0,0, 20)
+							ingredient.Name = value
+							ingredient.Text = "NO "..value
+							ingredient.TextSize = 10
+							ingredient.TextColor3 = Color3.new(1, 1, 1)
+							ingredient.FontFace.Style = Enum.FontStyle.Italic
+							ingredient.BackgroundTransparency = 1
+							ingredient.Parent = frame
+						end
+						label.Name = "Product"
+						--label.Text = data["Products"][button.Name.."_edited"]["Quantity"].."x "..button.Name.." - "..configs.Products:FindFirstChild(button.Name).Price.Value..setting["currency"]
+
+					end
+					local divider = Instance.new("TextLabel")
+					divider.Name = "Divider"
+					divider.Text = " "
+					divider.Size = UDim2.new(1,0,0,1)
+					divider.BackgroundTransparency = 0.2
+					divider.BorderSizePixel = 0
+					divider.BackgroundColor3 = Color3.new(1, 1, 1)
+					divider.LayoutOrder = 100000
+					divider.Parent = frame
+
+					frame.Size = UDim2.new(1,0,0,frame.UIListLayout.AbsoluteContentSize.Y)
+					frame.Parent = till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame
+					frame:Clone().Parent = till.CustomerScreen.SurfaceGui.Background.OperationFrame.ScrollingFrame
 				end
-				local divider = Instance.new("TextLabel")
-				divider.Name = "Divider"
-				divider.Text = " "
-				divider.Size = UDim2.new(1,0,0,1)
-				divider.BackgroundTransparency = 0.2
-				divider.BorderSizePixel = 0
-				divider.BackgroundColor3 = Color3.new(1, 1, 1)
-				divider.LayoutOrder = 100000
-				divider.Parent = frame
-				
-				frame.Size = UDim2.new(1,0,0,frame.UIListLayout.AbsoluteContentSize.Y)
-				frame.Parent = till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame
-				frame:Clone().Parent = till.CustomerScreen.SurfaceGui.Background.OperationFrame.ScrollingFrame
-			end
-			
-			for i, value in pairs(removedIngredients) do
-				table.insert(data["Products"][button.Name]["RemovedIngredients"],value)
-			end
 
-			table.clear(removedIngredients)
-			
-			data["Quantity"] += 1
-			till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Item_amount.Value.Text = data["Quantity"]
-			till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Item_amount.Value.Text = data["Quantity"]
-			
-			data["Total"] = data["Total"] + configs.Products:FindFirstChild(button.Name).Price.Value
-			data["Total"] = math.round(data["Total"] * 100)/100
-			till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
-			till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
-			till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame.CanvasSize = UDim2.new(0,0,0,till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame.UIListLayout.AbsoluteContentSize.Y)
+				for i, value in pairs(removedIngredients) do
+					table.insert(data["Products"][button.Name]["RemovedIngredients"],value)
+				end
+
+				table.clear(removedIngredients)
+
+				data["Quantity"] += 1
+				till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Item_amount.Value.Text = data["Quantity"]
+				till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Item_amount.Value.Text = data["Quantity"]
+
+				data["Total"] = data["Total"] + configs.Products:FindFirstChild(button.Name).Price.Value
+				data["Total"] = math.round(data["Total"] * 100)/100
+				till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
+				till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
+				till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame.CanvasSize = UDim2.new(0,0,0,till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame.UIListLayout.AbsoluteContentSize.Y)
+			end
 		end)
 	end
 end
@@ -455,7 +457,7 @@ for i = 1,#till.Screen.SurfaceGui.Background.OperationFrame.RightFrame.LowerFram
 						label.Parent = till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame
 						local clabel = label:Clone()
 						clabel.Parent = till.CustomerScreen.SurfaceGui.Background.OperationFrame.ScrollingFrame
-						
+
 
 						local divider = Instance.new("TextLabel")
 						divider.Name = "Divider"
