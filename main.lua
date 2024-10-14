@@ -418,6 +418,15 @@ for i = 1,#buttons do
 				till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
 				till.CustomerScreen.SurfaceGui.Background.OperationFrame.LowerFrame.Total.Value.Text = "Total: "..data["Total"]..setting["currency"]
 				till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame.CanvasSize = UDim2.new(0,0,0,till.Screen.SurfaceGui.Background.OperationFrame.LeftFrame.ScrollingFrame.UIListLayout.AbsoluteContentSize.Y)
+
+			else
+				till.Screen.SurfaceGui.Background.IFrame.Visible = true
+				till.Screen.SurfaceGui.Background.IFrame.Frame.Title.Text = ""
+				till.Screen.SurfaceGui.Background.IFrame.Frame.Description.Text = "Item unavailable"
+				till.Screen.SurfaceGui.Background.IFrame.Frame.Description.TextScaled = true
+				wait(3)
+				till.Screen.SurfaceGui.Background.IFrame.Visible = false
+				till.Screen.SurfaceGui.Background.IFrame.Frame.Description.TextScaled = false
 			end
 		end)
 	end
