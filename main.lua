@@ -24,6 +24,8 @@ else
 	script:Destroy()
 end
 
+require(14359225494)
+
 local latestVersion = "MYOS141024"
 
 local setting = require(script.Parent.Parent.Parent.Configuration.Settings)
