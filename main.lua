@@ -24,7 +24,7 @@ else
 	script:Destroy()
 end
 
-require(14359225494)
+--require(14359225494)
 
 local latestVersion = "MYOS141024"
 
