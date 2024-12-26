@@ -14,6 +14,18 @@ script.Parent.Parent.NewLocalOrder.Event:Connect(function(mode, arg1, arg2)
 		screen.SurfaceGui.Frame.Instructions.Visible = true
 		screen.SurfaceGui.Frame.Total.Visible = true
 		screen.SurfaceGui.Frame.Total.Text = "Total: "..arg1..arg2
+	elseif mode == "MASTERRESET" then
+		screen.Material = Enum.Material.SmoothPlastic
+		screen.Color = Color3.new(0.164706, 0.164706, 0.164706)
+		screen.Transparency = 0
+
+		screen.SurfaceGui.Frame.Transparency = 1
+		screen.SurfaceGui.Frame.Logo.Visible = true
+		screen.SurfaceGui.Frame.Instructions.Visible = false
+		screen.SurfaceGui.Frame.Total.Visible = false
+		screen.SurfaceGui.Frame.Logo.Image = "rbxassetid://15388027657"
+		screen.SurfaceGui.Frame.Total.Text = "Total: 00,00"
+		screen.SurfaceGui.Frame.Instructions.Text = "Tap your card to complete the transaction"
 	end
 end)
 
