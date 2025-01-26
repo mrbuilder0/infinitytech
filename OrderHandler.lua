@@ -141,7 +141,7 @@ script.Event.Event:Connect(function(info,arg1,arg2)
 				end
 			end
 		end
-		
+
 	elseif info == "requestAllOrders" then
 		local info = "allOrders"
 		script.Event:Fire(info,orders)
@@ -154,5 +154,13 @@ script.Event.Event:Connect(function(info,arg1,arg2)
 	elseif info == "statusChanged" then
 		local orderNumber = arg1["OrderNumber"]
 		orders[orderNumber]["Status"] = arg1["Status"]
+	elseif info == "requestOrderData" then
+		for i, value in pairs(orders) do
+			if i == tonumber(arg1) then
+				local info = "orderDataBack"
+				local arg2 = value
+				script.Event:Fire(info, arg1, arg2)
+			end
+		end
 	end
 end)
