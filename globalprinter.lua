@@ -9,14 +9,14 @@ script.Parent.Parent.GlobalReceiptEvent.Event:Connect(function(order, data)
 	script.Parent.Receipt.ClickDetector.MaxActivationDistance = 20
 
 	for i, value in pairs(data["Products"]) do
-			local label = Instance.new("TextLabel")
-			label.Parent = script.Parent.Receipt.SurfaceGui.PFrame
-			label.Size = UDim2.new(1,0,0, 18)
-			label.TextScaled = true
-			label.Text = value["Quantity"].."x "..i.." - "..configs.Products:FindFirstChild(i).Price.Value..setting["currency"]
-			label.Name = i
-			label.BackgroundTransparency = 1
-			script.Parent.Receipt.SurfaceGui.OrderNumber.Text = order
+		local label = Instance.new("TextLabel")
+		label.Parent = script.Parent.Receipt.SurfaceGui.PFrame
+		label.Size = UDim2.new(1,0,0, 18)
+		label.TextScaled = true
+		label.Text = value["Quantity"].."x "..i.." - "..configs.Products:FindFirstChild(value["Category"]):FindFirstChild(i).Price.Value..setting["currency"]
+		label.Name = i
+		label.BackgroundTransparency = 1
+		script.Parent.Receipt.SurfaceGui.OrderNumber.Text = order
 	end
 	script.Parent.Base.Sound:Play()
 	script.Parent.Receipt.ClickDetector.MaxActivationDistance = 20
