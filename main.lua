@@ -335,10 +335,10 @@ local function main()
 				bsound:Play()
 
 				if button:FindFirstChild("category") then
+					till.Screen.SurfaceGui.Background.OperationFrame.RightFrame.ScrollingFrame:ClearAllChildren()
 					for i = 1,#configs.Products:FindFirstChild(button.Name):GetChildren() do
 						local product = configs.Products:FindFirstChild(button.Name):GetChildren()[i]
 						if product:IsA("Folder")then
-							till.Screen.SurfaceGui.Background.OperationFrame.RightFrame.ScrollingFrame:ClearAllChildren()
 							script.UIGridLayout:Clone().Parent = till.Screen.SurfaceGui.Background.OperationFrame.RightFrame.ScrollingFrame
 							local buton = script.ImageLabel:Clone()
 							buton.Parent = till.Screen.SurfaceGui.Background.OperationFrame.RightFrame.ScrollingFrame
