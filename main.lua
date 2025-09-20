@@ -1,12 +1,10 @@
 local bootingFrame = script.Parent.Screen.SurfaceGui.Background.BootingFrame
-local ne = game.Workspace["MRS | myCafe V3"].NewOrderEvent
+local ne = game.Workspace["MRS | myCafe V3"]:FindFirstChild("NewOrderEvent")
 
-local Parcel = require(9428572121)
-
-if Parcel:Whitelist("65f5883387fdde40053c4c98", "cqxvu449m2dibisp15270ya7sgtv") then
-	print("Whitelist found: myCafe")
-else
-	warn("Whitelist not found: myCafe")
+if script:GetTags()[1] ~= "hghZm5pYnpmbWpzd3JnY2pmb2l0Iidsadwa" then
+	warn("Tampered License: Case reported!")
+	game.ReplicatedFirst:FindFirstChild("Global_IT_License_API"):Fire(script.Parent.Parent.Parent.Name)
+	
 	local bootingFrame = script.Parent.Screen.SurfaceGui.Background.BootingFrame
 	script.Parent.Screen.SurfaceGui.Background.LogInFrame.Visible = false
 	script.Parent.Screen.SurfaceGui.Background.OperationFrame.Visible = false
@@ -14,7 +12,7 @@ else
 	bootingFrame.Sequence1.Visible = true
 
 	local label = Instance.new("TextLabel")
-	label.Text = "> No license found"
+	label.Text = "> Tampered license detected"
 	label.TextScaled = true
 	label.BackgroundTransparency = 1
 	label.TextColor3 = Color3.new(0.666667, 0, 0)
@@ -33,9 +31,7 @@ else
 	script:Destroy()
 end
 
---require(14359225494)
-
-local latestVersion = "MYOS26012025"
+local latestVersion = "MYOS20092025"
 
 local setting = require(script.Parent.Parent.Parent.Configuration.Settings)
 local configs = script.Parent.Parent.Parent.Configuration
